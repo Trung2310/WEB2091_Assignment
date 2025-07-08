@@ -1,10 +1,114 @@
 {
-  "users": [
-    { "id": 1, "name": "Nguyễn Văn A", "email": "a@example.com" },
-    { "id": 2, "name": "Trần Thị B", "email": "b@example.com" }
+  "products": [
+    {
+      "id": 1,
+      "name": "Nike Air Max 270",
+      "brandId": 1,
+      "categoryId": 1,
+      "price": 150,
+      "size": [
+        38,
+        39,
+        40,
+        41
+      ],
+      "color": "Black/White",
+      "image": "https://example.com/images/airmax270.jpg",
+      "stock": 20,
+      "description": "Giày chạy bộ với đệm khí Air Max êm ái.",
+      "isAvailable": true
+    },
+    {
+      "name": "Nike Air Max 27011",
+      "price": 4444444,
+      "color": "ss",
+      "brandId": 4,
+      "categoryId": 4,
+      "size": [
+        "44"
+      ],
+      "image": "44",
+      "stock": 44,
+      "id": "3192"
+    }
   ],
-  "posts": [
-    { "id": 1, "title": "Bài viết 1", "content": "Nội dung bài viết 1", "userId": 1 },
-    { "id": 2, "title": "Bài viết 2", "content": "Nội dung bài viết 2", "userId": 2 }
+  "categories": [
+    {
+      "id": 1,
+      "name": "Running"
+    },
+    {
+      "id": 2,
+      "name": "Lifestyle"
+    }
+  ],
+  "brands": [
+    {
+      "id": 1,
+      "name": "Nike"
+    },
+    {
+      "id": 2,
+      "name": "Adidas"
+    },
+    {
+      "id": 3,
+      "name": "Puma"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "fullName": "Nguyễn Văn A",
+      "email": "a@example.com",
+      "role": "admin",
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "fullName": "Trần Thị B",
+      "email": "b@example.com",
+      "role": "user",
+      "isActive": false
+    },
+    {
+      "fullName": "trrrrr",
+      "email": "zrfidddxh@gmail.com",
+      "role": "user",
+      "isActive": false,
+      "id": "be2a"
+    },
+    {
+      "fullName": "trrrrrđ",
+      "email": "zrfidddxh@gmail.com",
+      "role": "staff",
+      "isActive": true,
+      "id": "STF2642"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "userId": 2,
+      "products": [
+        {
+          "productId": 1,
+          "quantity": 2,
+          "size": 40
+        }
+      ],
+      "total": 300,
+      "status": "pending",
+      "date": "2025-07-04"
+    }
+  ],
+  "stats": [
+    {
+      "id": 1,
+      "date": "2025-07-04",
+      "totalOrders": 5,
+      "totalRevenue": 1200,
+      "newUsers": 3
+    }
   ]
 }
