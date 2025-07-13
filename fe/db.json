@@ -1,71 +1,76 @@
 {
   "products": [
     {
-      "id": 1,
       "name": "Nike Air Max 270",
+      "price": 150,
+      "color": "Black/White",
       "brandId": 1,
       "categoryId": 1,
-      "price": 150,
       "size": [
         38,
         39,
         40,
         41
       ],
-      "color": "Black/White",
-      "image": "https://example.com/images/airmax270.jpg",
+      "image": "https://picsum.photos/id/237/100/100",
       "stock": 20,
       "description": "Giày chạy bộ với đệm khí Air Max êm ái.",
-      "isAvailable": true
+      "isAvailable": true,
+      "id": "1"
     },
     {
       "name": "Nike Air Max 27011",
-      "price": 4444444,
-      "color": "ss",
-      "brandId": 4,
-      "categoryId": 4,
+      "price": 12,
+      "color": "Black/Whitedddđ",
+      "brandId": 22,
+      "categoryId": 2222,
       "size": [
-        "44"
+        38,
+        39,
+        40,
+        41
       ],
-      "image": "44",
-      "stock": 44,
-      "id": "3192"
+      "image": "https://picsum.photos/id/237/100/100",
+      "stock": 22,
+      "description": "Giày chạy bộ với đệm khí Air Max êm ái.",
+      "isAvailable": true,
+      "id": "PROD3392"
     }
   ],
   "categories": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Running"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Lifestyle"
     }
   ],
   "brands": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Nike"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Adidas"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Puma"
     }
   ],
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "fullName": "Nguyễn Văn A",
       "email": "a@example.com",
       "role": "admin",
       "isActive": true
     },
     {
-      "id": 2,
+      "id": "2",
       "fullName": "Trần Thị B",
       "email": "b@example.com",
       "role": "user",
@@ -88,7 +93,7 @@
   ],
   "orders": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 2,
       "products": [
         {
@@ -104,7 +109,7 @@
   ],
   "stats": [
     {
-      "id": 1,
+      "id": "1",
       "date": "2025-07-04",
       "totalOrders": 5,
       "totalRevenue": 1200,

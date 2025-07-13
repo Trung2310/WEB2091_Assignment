@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, InputNumber, Select, Space, Popconfirm, Typography } from 'antd';
-import api from '../../../config/api';
+import api from '../../../configs/api';
+import { productService } from '../../../services/ProductService';
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
-  brandId: number;
-  categoryId: number;
   price: number;
-  size: number[];
   color: string;
+  brandId?: number;
+  categoryId?: number;
+  size?: number[];
   image: string;
-  stock: number;
-  description: string;
-  isAvailable: boolean;
+  stock?: number;
+  description?: string;
+  isAvailable?: boolean;
 }
 
 const ProductManager: React.FC = () => {
@@ -24,8 +25,8 @@ const ProductManager: React.FC = () => {
   const [form] = Form.useForm();
 
   const fetchProducts = async () => {
-    const res = await api.get('/products');
-    setProducts(res.data);
+    const res = await productService.getAll();
+    setProducts(res);
   };
 
   useEffect(() => {
@@ -45,17 +46,17 @@ const ProductManager: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: number) => {
-    await api.delete(`/${id}`);
+  const handleDelete = async (id: string) => {
+    await productService.remove(id);
     fetchProducts();
   };
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (isEdit && editingProduct) {
-      await api.put(`/products/${editingProduct.id}`, { ...values, id: editingProduct.id });
+      await productService.update(editingProduct.id, values);
     } else {
-      await api.post('/products', values);
+      await productService.add(values);
     }
     setIsModalOpen(false);
     fetchProducts();
@@ -79,6 +80,17 @@ const ProductManager: React.FC = () => {
     {
       title: 'Màu sắc',
       dataIndex: 'color',
+    },
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'image',
+      render: (image: string) => (
+        <img
+          src={`${image}`}
+          alt="Ảnh"
+          style={{ width: 60, height: 60, objectFit: 'cover' }}
+        />
+      ),
     },
     {
       title: 'Thao tác',

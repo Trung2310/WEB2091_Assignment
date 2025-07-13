@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, Space, Popconfirm, Select } from 'antd';
-import api from '../../../config/api';
+import api from '../../../configs/api';
+import { userService } from '../../../services/UserService';
 
 interface User {
-  id: number;
+  id: string;
   fullName: string;
   email: string;
   role: string;
@@ -18,8 +19,8 @@ const UserManager: React.FC = () => {
   const [form] = Form.useForm();
 
   const fetchUsers = async () => {
-    const res = await api.get('/users');
-    setUsers(res.data);
+    const res = await userService.getAll();
+    setUsers(res);
   };
 
   useEffect(() => {
@@ -39,36 +40,18 @@ const UserManager: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: number) => {
-    await api.delete(`/users/${id}`);
+  const handleDelete = async (id: string) => {
+    await userService.remove(id);
     fetchUsers();
-  };
-
-  const generateId = (role: string) => {
-    const prefix = {
-      admin: 'ADM',
-      staff: 'STF',
-      user: 'USR',
-    }[role] || 'GEN';
-
-    const random = Math.floor(1000 + Math.random() * 9000); 
-    return `${prefix}${random}`;
   };
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
 
     if (isEdit && editingUser) {
-      await api.put(`/users/${editingUser.id}`, {
-        ...values,
-        id: editingUser.id,
-      });
+      await userService.update(editingUser.id, values);
     } else {
-      const id = generateId(values.role);
-      await api.post('/users', {
-        ...values,
-        id,
-      });
+      await userService.add(values);
     }
 
     setIsModalOpen(false);
