@@ -46,28 +46,30 @@ const OrderList: React.FC = () => {
   };
 
   const columns = [
-    { title: "Mã đơn hàng", dataIndex: "id", key: "id" },
-    { title: "Tên khách hàng", dataIndex: "userId", key: "userId" },
-    { title: "Tổng giá trị", dataIndex: "total", key: "total" },
-    { title: "Trạng thái", dataIndex: "status", key: "status" },
-    {
-      title: "Hành động", key: "action", render: (_, record: Order) => (
-        <div>
-          <Button onClick={() => handleStatusUpdate(record.id)} disabled={record.status === "Đã giao"}>
-            Cập nhật trạng thái
-          </Button>
-          <Popconfirm
-            title="Bạn có chắc chắn muốn xóa?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
-          >
-            <Button danger>Xóa</Button>
-          </Popconfirm>
-        </div>
-      ),
-    },
-  ];
+  { title: "Mã đơn hàng", dataIndex: "id", key: "id" },
+  { title: "Tên khách hàng", dataIndex: "userId", key: "userId" },
+  { title: "Tổng giá trị", dataIndex: "total", key: "total" },
+  { title: "Trạng thái", dataIndex: "status", key: "status" },
+  {
+    title: "Hành động", key: "action", render: (_: undefined, record: Order) => (
+      <div>
+        <Button onClick={() => handleStatusUpdate(record.id)} disabled={record.status === "Đã giao"}>
+          Cập nhật trạng thái
+        </Button>
+        <Popconfirm
+          title="Bạn có chắc chắn muốn xóa?"
+          onConfirm={() => handleDelete(record.id)}
+          okText="Xóa"
+          cancelText="Hủy"
+        >
+          <Button danger>Xóa</Button>
+        </Popconfirm>
+      </div>
+    ),
+  },
+];
+
+
 
   return (
     <div style={{ padding: "20px" }}>

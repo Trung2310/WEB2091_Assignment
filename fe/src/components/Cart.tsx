@@ -31,19 +31,20 @@ const Cart: React.FC = () => {
   };
 
   const columns = [
-    { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
-    { title: 'Giá', dataIndex: 'price', key: 'price' },
-    { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
-    {
-      title: 'Hành động',
-      key: 'action',
-      render: (_, record: CartItem) => (
-        <Button danger onClick={() => handleRemoveItem(record.productId)}>
-          Xóa
-        </Button>
-      ),
-    },
-  ];
+  { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
+  { title: 'Giá', dataIndex: 'price', key: 'price' },
+  { title: 'Số lượng', dataIndex: 'quantity', key: 'quantity' },
+  {
+    title: 'Hành động',
+    key: 'action',
+    render: (_: undefined, record: CartItem) => (
+      <Button danger onClick={() => handleRemoveItem(record.productId)}>
+        Xóa
+      </Button>
+    ),
+  },
+];
+
 
   const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
