@@ -5,6 +5,10 @@ import {
   DashboardOutlined,
   UserOutlined,
   ShoppingCartOutlined,
+  MenuOutlined,
+  MenuFoldOutlined,
+  BranchesOutlined,
+  OrderedListOutlined,
 } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
@@ -27,6 +31,9 @@ const AdminLayout: React.FC = () => {
             { key: "/admin/dashboard", icon: <DashboardOutlined />, label: "Dashboard" },
             { key: "/admin/users", icon: <UserOutlined />, label: "Người dùng" },
             { key: "/admin/products", icon: <ShoppingCartOutlined />, label: "Sản phẩm" },
+            { key: "/admin/categories", icon: <MenuFoldOutlined />, label: "Danh mục" },
+            { key: "/admin/brands", icon: <BranchesOutlined />, label: "Thương hiệu" },
+            { key: "/admin/orders", icon: <OrderedListOutlined />, label: "Đơn hàng" },
           ]}
         />
       </Sider>
@@ -45,7 +52,10 @@ const AdminLayout: React.FC = () => {
           <h5 className="mb-0" style={{ margin: "0 auto" }}>Quản trị hệ thống</h5>
         </Header>
 
-        <Content className="p-4">
+        <Content className="p-4" style={{
+          overflowY: "auto", height: "calc(100vh - 64px)", scrollbarWidth: "none"
+        }}>
+
           <Outlet />
         </Content>
       </Layout>

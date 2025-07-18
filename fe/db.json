@@ -1,73 +1,11 @@
 {
-  "products": [
-    {
-      "name": "Nike Air Max 270",
-      "price": 150,
-      "color": "Black/White",
-      "brandId": 1,
-      "categoryId": 1,
-      "size": [
-        38,
-        39,
-        40,
-        41
-      ],
-      "image": "https://picsum.photos/id/237/100/100",
-      "stock": 20,
-      "description": "Giày chạy bộ với đệm khí Air Max êm ái.",
-      "isAvailable": true,
-      "id": "1"
-    },
-    {
-      "name": "Nike Air Max 27011",
-      "price": 12,
-      "color": "Black/Whitedddđ",
-      "brandId": 22,
-      "categoryId": 2222,
-      "size": [
-        38,
-        39,
-        40,
-        41
-      ],
-      "image": "https://picsum.photos/id/237/100/100",
-      "stock": 22,
-      "description": "Giày chạy bộ với đệm khí Air Max êm ái.",
-      "isAvailable": true,
-      "id": "PROD3392"
-    }
-  ],
-  "categories": [
-    {
-      "id": "1",
-      "name": "Running"
-    },
-    {
-      "id": "2",
-      "name": "Lifestyle"
-    }
-  ],
-  "brands": [
-    {
-      "id": "1",
-      "name": "Nike"
-    },
-    {
-      "id": "2",
-      "name": "Adidas"
-    },
-    {
-      "id": "3",
-      "name": "Puma"
-    }
-  ],
   "users": [
     {
-      "id": "1",
-      "fullName": "Nguyễn Văn A",
+      "fullName": "Nguyễn Văn A1",
       "email": "a@example.com",
       "role": "admin",
-      "isActive": true
+      "isActive": true,
+      "id": "1"
     },
     {
       "id": "2",
@@ -75,45 +13,163 @@
       "email": "b@example.com",
       "role": "user",
       "isActive": false
+    }
+  ],
+  "products": [
+    {
+      "id": "PROD1001",
+      "name": "Nike Air Zoom Pegasus 38",
+      "price": 2900000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "image": "https://example.com/images/nike-pegasus.jpg",
+      "stock": 10,
+      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "isAvailable": true
     },
     {
-      "fullName": "trrrrr",
-      "email": "zrfidddxh@gmail.com",
-      "role": "user",
-      "isActive": false,
-      "id": "be2a"
+      "id": "PROD1002",
+      "name": "Adidas Ultraboost 22",
+      "price": 3200000,
+      "color": "Core Black",
+      "brandId": 2,
+      "categoryId": 1,
+      "size": [
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "image": "https://example.com/images/adidas-ultraboost.jpg",
+      "stock": 15,
+      "description": "Giày hiệu suất cao với đệm Boost.",
+      "isAvailable": true
     },
     {
-      "fullName": "trrrrrđ",
-      "email": "zrfidddxh@gmail.com",
-      "role": "staff",
-      "isActive": true,
-      "id": "STF2642"
+      "id": "PROD1003",
+      "name": "Converse Chuck Taylor All Star",
+      "price": 1500000,
+      "color": "White",
+      "brandId": 3,
+      "categoryId": 2,
+      "size": [
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "image": "https://example.com/images/converse-chuck.jpg",
+      "stock": 20,
+      "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
+      "isAvailable": true
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Giày thể thao",
+      "description": "Các loại giày dùng cho thể thao và thời trang."
+    },
+    {
+      "id": "2",
+      "name": "Áo khoác",
+      "description": "Áo khoác, áo hoodie, áo ấm các loại."
+    },
+    {
+      "name": "KaezahaT24",
+      "description": "dd",
+      "id": "d808"
+    }
+  ],
+  "brands": [
+    {
+      "name": "Nike2",
+      "origin": "USA",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "name": "Adidas",
+      "origin": "Germany"
+    },
+    {
+      "id": "3ed7",
+      "name": "Phòng 101",
+      "origin": "HN"
     }
   ],
   "orders": [
     {
-      "id": "1",
-      "userId": 2,
-      "products": [
+      "id": "ORD1001",
+      "userId": "1",
+      "userName": "Nam",
+      "items": [
         {
-          "productId": 1,
+          "productId": "PROD1001",
+          "name": "Nike Air Max 90",
+          "size": 42,
+          "color": "Black/White",
+          "quantity": 1,
+          "price": 1500
+        },
+        {
+          "productId": "PROD1002",
+          "name": "Adidas Ultraboost",
+          "size": 41,
+          "color": "White",
           "quantity": 2,
-          "size": 40
+          "price": 1800
         }
       ],
-      "total": 300,
-      "status": "pending",
-      "date": "2025-07-04"
-    }
-  ],
-  "stats": [
+      "total": 5100,
+      "status": "Pending",
+      "createdAt": "2025-07-17T08:00:00Z"
+    },
     {
-      "id": "1",
-      "date": "2025-07-04",
-      "totalOrders": 5,
-      "totalRevenue": 1200,
-      "newUsers": 3
+      "id": "ORD1002",
+      "userId": "2",
+      "userName": "Lam",
+      "items": [
+        {
+          "productId": "PROD1003",
+          "name": "Converse Chuck Taylor",
+          "size": 43,
+          "color": "Red",
+          "quantity": 1,
+          "price": 80
+        }
+      ],
+      "total": 80,
+      "status": "Completed",
+      "createdAt": "2025-07-15T10:30:00Z"
+    },
+    {
+      "id": "ORD1002",
+      "userId": "2",
+      "userName": "Lam",
+      "items": [
+        {
+          "productId": "PROD1003",
+          "name": "Converse Chuck Taylor",
+          "size": 43,
+          "color": "Red",
+          "quantity": 1,
+          "price": 80
+        }
+      ],
+      "total": 80,
+      "status": "Completed",
+      "createdAt": "2025-03-15T10:30:00Z"
     }
   ]
 }
