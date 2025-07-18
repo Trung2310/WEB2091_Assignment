@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, InputNumber, Select, Space, Popconfirm, Typography } from 'antd';
-import api from '../../../configs/api';
 import { productService } from '../../../services/ProductService';
 
 interface Product {
