@@ -1,3 +1,4 @@
+/* Cấu trúc chung */
 #root {
   /* max-width: 1280px; */
   width: 100%;
@@ -6,19 +7,23 @@
   text-align: center;
 }
 
+/* Logo và hiệu ứng hover */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Animation spin logo */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -34,10 +39,226 @@
   }
 }
 
+/* Card */
 .card {
   padding: 2em;
 }
 
+/* Đọc tài liệu */
 .read-the-docs {
   color: #888;
+}
+
+/* Các kiểu cho phần Client */
+.client-container {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.client-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Style cho các nút trong Client */
+.client-btn {
+  background-color: #4b8ff5;
+  border-color: #4b8ff5;
+}
+
+.client-btn:hover {
+  background-color: #3383e4;
+  border-color: #3383e4;
+}
+
+/* Các kiểu cho bảng sản phẩm trong Client */
+.client-table .ant-table-thead > tr > th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.client-table .ant-table {
+  margin-top: 20px;
+}
+
+/* Các kiểu Modal */
+.ant-modal-header {
+  background-color: #4b8ff5;
+  color: white;
+}
+
+.ant-btn-primary {
+  background-color: #4b8ff5;
+  border-color: #4b8ff5;
+}
+
+.ant-btn-primary:hover {
+  background-color: #3383e4;
+  border-color: #3383e4;
+}
+
+/* Style cho input tìm kiếm */
+.search-input {
+  margin-bottom: 20px;
+  width: 300px;
+}
+
+/* Style cho profile */
+.profile-container {
+  padding: 20px;
+  font-size: 18px;
+}
+
+.profile-container p {
+  margin-bottom: 10px;
+}
+
+/* Các kiểu cho giỏ hàng */
+.cart-container {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+.cart-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #f0f0f0;
+}
+
+.cart-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+}
+
+.cart-item-info {
+  flex: 1;
+  padding-left: 10px;
+}
+
+.cart-item-total {
+  font-weight: bold;
+}
+
+.cart-btn {
+  background-color: #3383e4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.cart-btn:hover {
+  background-color: #4b8ff5;
+}
+
+/* Các kiểu cho thanh toán */
+.checkout-container {
+  padding: 20px;
+}
+
+.checkout-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.checkout-form {
+  width: 60%;
+  margin: 0 auto;
+}
+
+.checkout-input {
+  margin-bottom: 20px;
+}
+
+.checkout-submit {
+  background-color: #4b8ff5;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.checkout-submit:hover {
+  background-color: #3383e4;
+}
+
+/* Lịch sử đơn hàng */
+.order-history-container {
+  padding: 20px;
+}
+
+.order-history-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.order-history-item {
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.order-history-item p {
+  margin: 5px 0;
+}
+
+.layout {
+  background-color: #f0f2f5; /* Màu nền của layout */
+}
+
+/* Header */
+.ant-layout-header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+.ant-layout-footer {
+  background-color: #ffffff;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+/* Sider (Menu bên trái) */
+.ant-layout-sider {
+  background-color: #001529;
+}
+
+/* Menu item */
+.ant-menu-item {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ant-layout-header {
+    padding: 0 10px;
+  }
+}
+
+.clients-header {
+  background-color: #f0f2f5;
+  padding: 20px;
+  text-align: center;
+  margin-top: 20px; 
+}
+
+
+.clients-footer {
+  background-color: #f0f2f5;
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
