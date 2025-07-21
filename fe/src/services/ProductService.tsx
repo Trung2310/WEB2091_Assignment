@@ -18,8 +18,12 @@ export interface Product {
 // const API_URL = 'http://localhost:3001/products';
 
 export const productService = {
-  getAll: async (): Promise<Product[]> => {
-    const res = await api.get(`/products`);
+  getAll: async (search: string): Promise<Product[]> => {
+    const res = await api.get(`/products`, {
+      params: {
+        q: search
+      }
+    });
     // const res = await axios.get(API_URL);
     return res.data;
   },

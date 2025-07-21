@@ -55,7 +55,7 @@ const BrandManager: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <Typography.Title level={2}>🏷️ Quản lý thương hiệu</Typography.Title>
+      <Typography.Title level={2}>Quản lý thương hiệu</Typography.Title>
 
       <div style={{ textAlign: 'right', marginBottom: 16 }}>
         <Button type="primary" onClick={handleAdd}>Thêm thương hiệu</Button>

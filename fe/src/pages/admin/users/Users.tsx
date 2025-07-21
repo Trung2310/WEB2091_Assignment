@@ -102,7 +102,7 @@ const UserManager: React.FC = () => {
   return (
     <div style={{ padding: 20 }}>
       <h2 style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span>👤 Quản lý người dùng</span>
+        <span>Quản lý người dùng</span>
         <Button type="primary" onClick={handleAdd}>
           Thêm người dùng
         </Button>

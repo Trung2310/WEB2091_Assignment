@@ -66,7 +66,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h2>📊 Thống kê đơn hàng</h2>
+      <h2>Thống kê đơn hàng</h2>
 
       <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col>
