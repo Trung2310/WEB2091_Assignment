@@ -4,7 +4,7 @@
       "fullName": "Nguyễn Văn A1",
       "email": "a@example.com",
       "role": "admin",
-      "isActive": true,
+      "isActive": false,
       "id": "1"
     },
     {
@@ -30,7 +30,7 @@
         41,
         42
       ],
-      "image": "https://example.com/images/nike-pegasus.jpg",
+      "image": "https://picsum.dev/300/200",
       "stock": 10,
       "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
       "isAvailable": true
@@ -49,7 +49,7 @@
         42,
         43
       ],
-      "image": "https://example.com/images/adidas-ultraboost.jpg",
+      "image": "https://picsum.dev/300/200",
       "stock": 15,
       "description": "Giày hiệu suất cao với đệm Boost.",
       "isAvailable": true
@@ -68,7 +68,64 @@
         39,
         40
       ],
-      "image": "https://example.com/images/converse-chuck.jpg",
+      "image": "https://picsum.dev/300/200",
+      "stock": 20,
+      "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
+      "isAvailable": true
+    },
+    {
+      "id": "PROD1004",
+      "name": "Converse Chuck Taylor All Star",
+      "price": 1500000,
+      "color": "White",
+      "brandId": 3,
+      "categoryId": 2,
+      "size": [
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "image": "https://picsum.dev/300/200",
+      "stock": 20,
+      "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
+      "isAvailable": true
+    },
+    {
+      "id": "PROD1005",
+      "name": "Converse Chuck Taylor All Star",
+      "price": 1500000,
+      "color": "White",
+      "brandId": 3,
+      "categoryId": 2,
+      "size": [
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "image": "https://picsum.dev/300/200",
+      "stock": 20,
+      "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
+      "isAvailable": true
+    },
+    {
+      "id": "PROD1006",
+      "name": "Converse Chuck Taylor All Star",
+      "price": 1500000,
+      "color": "White",
+      "brandId": 3,
+      "categoryId": 2,
+      "size": [
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "image": "https://picsum.dev/300/200",
       "stock": 20,
       "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
       "isAvailable": true
@@ -150,7 +207,7 @@
         }
       ],
       "total": 80,
-      "status": "Completed",
+      "status": "Cancelled",
       "createdAt": "2025-07-15T10:30:00Z"
     },
     {

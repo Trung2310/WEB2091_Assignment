@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Modal, Form, Input, InputNumber, Select, Space, Popconfirm, Typography } from 'antd';
 import { productService } from '../../../services/ProductService';
+import { useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 interface Product {
   id: string;
@@ -17,20 +19,32 @@ interface Product {
 }
 
 const ProductManager: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  // const [products, setProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [form] = Form.useForm();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchText, setSearchText] = useState(searchParams.get("search") || "");
 
   const fetchProducts = async () => {
-    const res = await productService.getAll();
-    setProducts(res);
+    const res = await productService.getAll(searchText);
+    return res;
+    // setProducts(res);
   };
+  const {
+    data: products,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+  });
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, []);
 
   const handleAdd = () => {
     form.resetFields();
@@ -59,6 +73,11 @@ const ProductManager: React.FC = () => {
     }
     setIsModalOpen(false);
     fetchProducts();
+  };
+
+  const handleSearch = () => {
+    setSearchParams({ search: searchText });
+    refetch();
   };
 
   const columns = [
@@ -112,7 +131,7 @@ const ProductManager: React.FC = () => {
   return (
     <div style={{ padding: 20 }}>
       <Typography.Title level={2} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        🛒 Quản lý sản phẩm
+        Quản lý sản phẩm
       </Typography.Title>
 
       <div style={{ textAlign: 'right', marginBottom: 16 }}>
@@ -120,10 +139,20 @@ const ProductManager: React.FC = () => {
           Thêm sản phẩm
         </Button>
       </div>
+      <Space style={{ marginBottom: 16 }}>
+        <Input
+          placeholder="Tìm sản phẩm..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          onPressEnter={handleSearch}
+        />
+        <Button type="primary" onClick={handleSearch}>Tìm kiếm</Button>
+      </Space>
       <Table
         dataSource={products}
         columns={columns}
         rowKey="id"
+        pagination={{ pageSize: 5 }}
         expandable={{
           expandedRowRender: (record: Product) => (
             <div style={{ background: '#f6f6f6', padding: 16 }}>

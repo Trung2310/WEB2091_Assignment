@@ -55,7 +55,7 @@ const CategoryManager: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <Typography.Title level={2}>📂 Quản lý danh mục</Typography.Title>
+      <Typography.Title level={2}>Quản lý danh mục</Typography.Title>
 
       <div style={{ textAlign: 'right', marginBottom: 16 }}>
         <Button type="primary" onClick={handleAdd}>Thêm danh mục</Button>

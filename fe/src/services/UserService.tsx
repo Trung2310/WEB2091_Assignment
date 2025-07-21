@@ -21,32 +21,27 @@ const generateId = (role: string): string => {
 };
 
 export const userService = {
-  // Lấy tất cả người dùng
   getAll: async (): Promise<User[]> => {
     const res = await api.get('/users');
     return res.data;
   },
 
-  // Lấy chi tiết theo ID
   getById: async (id: string): Promise<User> => {
     const res = await api.get(`/users/${id}`);
     return res.data;
   },
 
-  // Thêm mới user (tự tạo id)
   add: async (user: Omit<User, 'id'>): Promise<User> => {
     const id = generateId(user.role);
     const res = await api.post('/users', { ...user, id });
     return res.data;
   },
 
-  // Cập nhật user theo ID
   update: async (id: string, user: User): Promise<User> => {
     const res = await api.put(`/users/${id}`, user);
     return res.data;
   },
 
-  // Xoá user theo ID
   remove: async (id: string): Promise<void> => {
     await api.delete(`/users/${id}`);
   },

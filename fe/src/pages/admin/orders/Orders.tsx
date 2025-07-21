@@ -54,12 +54,16 @@ const OrderManager: React.FC = () => {
 
     return (
         <div style={{ padding: 20 }}>
-            <Typography.Title level={2}>📦 Quản lý đơn hàng</Typography.Title>
+            <Typography.Title level={2}>Quản lý đơn hàng</Typography.Title>
 
             <Table dataSource={orders} rowKey="id" columns={[
                 { title: 'ID', dataIndex: 'id', width: 60 },
                 { title: 'Khách hàng', dataIndex: 'userId', render: (_: string, record: any) => `[${record.userId}]  ${record.userName}` },
-                { title: 'Tổng tiền', dataIndex: 'total', render: (v) => `${v} VND` },
+                {
+                    title: 'Tổng tiền',
+                    dataIndex: 'total',
+                    render: (v) => `${new Intl.NumberFormat('vi-VN').format(v)} VND`
+                },
                 { title: 'Ngày tạo', dataIndex: 'createdAt' },
                 {
                     title: 'Trạng thái',
@@ -107,12 +111,12 @@ const OrderManager: React.FC = () => {
                                     {
                                         title: 'Đơn giá',
                                         dataIndex: 'price',
-                                        render: (price: number) => `${price} VND`,
+                                        render: (price: number) => `${new Intl.NumberFormat('vi-VN').format(price)} VND`,
                                     },
                                     {
                                         title: 'Thành tiền',
                                         key: 'total',
-                                        render: (_, item) => `${item.quantity * item.price} VND`,
+                                        render: (_, item) => `${new Intl.NumberFormat('vi-VN').format(item.quantity * item.price)} VND`,
                                     },
                                 ]}
                             />
