@@ -41,3 +41,52 @@
 .read-the-docs {
   color: #888;
 }
+
+/* src/App.css hoặc src/styles/clientLayout.css */
+
+.client-layout {
+  min-height: 100vh;
+}
+
+.client-header {
+  background-color: #333;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+}
+
+.client-header .logo h2 {
+  color: #fff;
+  margin: 0;
+}
+
+.client-header .ant-menu {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.client-header .ant-menu-item {
+  font-size: 16px;
+}
+
+.client-content {
+  padding: 30px;
+  background-color: #f5f5f5;
+}
+
+.client-footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.footer-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #ccc;
+}
+

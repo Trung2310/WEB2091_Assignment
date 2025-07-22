@@ -31,6 +31,11 @@ export const userService = {
     return res.data;
   },
 
+  getCurrentUser: (): User | null => {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null; 
+  },
+
   add: async (user: Omit<User, 'id'>): Promise<User> => {
     const id = generateId(user.role);
     const res = await api.post('/users', { ...user, id });
@@ -44,5 +49,21 @@ export const userService = {
 
   remove: async (id: string): Promise<void> => {
     await api.delete(`/users/${id}`);
+  },
+
+  login: async (email: string, password: string): Promise<User | null> => {
+    try {
+      const res = await api.post('/login', { email, password });
+      const user = res.data;
+      localStorage.setItem('user', JSON.stringify(user));  
+      return user;
+    } catch (error) {
+      console.error('Đăng nhập thất bại', error);
+      return null;
+    }
+  },
+
+  logout: (): void => {
+    localStorage.removeItem('user');
   },
 };
