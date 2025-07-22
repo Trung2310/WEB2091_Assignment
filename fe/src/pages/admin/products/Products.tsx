@@ -3,6 +3,9 @@ import { Table, Button, Modal, Form, Input, InputNumber, Select, Space, Popconfi
 import { productService } from '../../../services/ProductService';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { brandService } from '../../../services/BrandService';
+import { Option } from 'antd/es/mentions';
+import { categoryService } from '../../../services/CategoryService';
 
 interface Product {
   id: string;
@@ -16,10 +19,11 @@ interface Product {
   stock?: number;
   description?: string;
   isAvailable?: boolean;
+  brand?: { id: number; name: string };
+  category?: { id: number; name: string };
 }
 
 const ProductManager: React.FC = () => {
-  // const [products, setProducts] = useState<Product[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -30,7 +34,6 @@ const ProductManager: React.FC = () => {
   const fetchProducts = async () => {
     const res = await productService.getAll(searchText);
     return res;
-    // setProducts(res);
   };
   const {
     data: products,
@@ -38,13 +41,9 @@ const ProductManager: React.FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["products"],
+    queryKey: ["products", searchText],
     queryFn: fetchProducts,
   });
-
-  // useEffect(() => {
-  //   fetchProducts();
-  // }, []);
 
   const handleAdd = () => {
     form.resetFields();
@@ -61,7 +60,7 @@ const ProductManager: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     await productService.remove(id);
-    fetchProducts();
+    refetch
   };
 
   const handleSubmit = async () => {
@@ -72,13 +71,23 @@ const ProductManager: React.FC = () => {
       await productService.add(values);
     }
     setIsModalOpen(false);
-    fetchProducts();
+    refetch();
   };
 
   const handleSearch = () => {
     setSearchParams({ search: searchText });
     refetch();
   };
+
+  const { data: brands = [] } = useQuery({
+    queryKey: ['brands'],
+    queryFn: () => brandService.getAll()
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoryService.getAll()
+  });
 
   const columns = [
     {
@@ -96,10 +105,6 @@ const ProductManager: React.FC = () => {
       render: (price: number) => `$${price}`,
     },
     {
-      title: 'Màu sắc',
-      dataIndex: 'color',
-    },
-    {
       title: 'Hình ảnh',
       dataIndex: 'image',
       render: (image: string) => (
@@ -109,6 +114,64 @@ const ProductManager: React.FC = () => {
           style={{ width: 60, height: 60, objectFit: 'cover' }}
         />
       ),
+    },
+    {
+      title: 'Thương hiệu',
+      dataIndex: ['brand', 'name'],
+      key: 'brand',
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+        <div style={{ padding: 8 }}>
+          <Select
+            value={selectedKeys[0]}
+            onChange={(value) => {
+              setSelectedKeys(value ? [value] : []);
+              confirm();
+            }}
+            style={{ width: 200 }}
+            defaultValue={''}
+          >
+            <Option value="">Tất cả</Option>
+            {brands.map((item) => (
+              <Option key={String(item.id)} value={item.name}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        </div>
+      ),
+      onFilter: (value: any, record: any) => {
+        return record.brand?.name === value;
+      },
+      render: (text: any) => text || '',
+    },
+    {
+      title: 'Danh mục',
+      dataIndex: ['category', 'name'],
+      key: 'category',
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+        <div style={{ padding: 8 }}>
+          <Select
+            value={selectedKeys[0]}
+            onChange={(value) => {
+              setSelectedKeys(value ? [value] : []);
+              confirm();
+            }}
+            style={{ width: 200 }}
+            defaultValue={''}
+          >
+            <Option value="">Tất cả</Option>
+            {categories.map((item) => (
+              <Option key={String(item.id)} value={item.name}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        </div>
+      ),
+      onFilter: (value: any, record: any) => {
+        return record.category?.name === value;
+      },
+      render: (text: any) => text || '',
     },
     {
       title: 'Thao tác',
@@ -127,6 +190,9 @@ const ProductManager: React.FC = () => {
       ),
     },
   ];
+
+  if (isLoading) return <p>Đang tải dữ liệu...</p>;
+  if (error) return <p>Lỗi khi tải dữ liệu!</p>;
 
   return (
     <div style={{ padding: 20 }}>
@@ -159,6 +225,7 @@ const ProductManager: React.FC = () => {
               <p><strong>Thương hiệu (brandId):</strong> {record.brandId}</p>
               <p><strong>Danh mục (categoryId):</strong> {record.categoryId}</p>
               <p><strong>Kích cỡ:</strong> {record.size?.join(', ')}</p>
+              <p><strong>Màu sắc:</strong> {record.color}</p>
               <p><strong>Hình ảnh:</strong> <img src={record.image} alt={record.name} style={{ width: 100 }} /></p>
               <p><strong>Tồn kho:</strong> {record.stock}</p>
               <p><strong>Mô tả:</strong> {record.description}</p>

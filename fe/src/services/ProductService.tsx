@@ -1,5 +1,5 @@
-// import axios from 'axios';
 import api from '../configs/api';
+import qs from 'qs';
 
 export interface Product {
   id: string; 
@@ -15,22 +15,20 @@ export interface Product {
   isAvailable?: boolean;
 }
 
-// const API_URL = 'http://localhost:3001/products';
-
 export const productService = {
   getAll: async (search: string): Promise<Product[]> => {
     const res = await api.get(`/products`, {
       params: {
-        q: search
-      }
+        q: search,
+        _expand: ['brand', 'category'],
+      },
+      paramsSerializer: params => qs.stringify(params, {arrayFomat: 'repeat'})
     });
-    // const res = await axios.get(API_URL);
     return res.data;
   },
 
   getById: async (id: string): Promise<Product> => {
     const res = await api.get(`/products/${id}`);
-    // const res = await axios.get(`${API_URL}/${id}`);
     return res.data;
   },
 
@@ -38,18 +36,15 @@ export const productService = {
     const randomId = `PROD${Math.floor(1000 + Math.random() * 9000)}`;
     const newProduct = { ...product, id: randomId };
     const res = await api.post(`/products`, newProduct);
-    // const res = await axios.post(API_URL, newProduct);
     return res.data;
   },
 
   update: async (id: string, product: Product): Promise<Product> => {
     const res = await api.put(`products/${id}`, product);
-    // const res = await axios.put(`${API_URL}/${id}`, product);
     return res.data;
   },
 
   remove: async (id: string): Promise<void> => {
     await api.delete(`products/${id}`);
-    // await axios.delete(`${API_URL}/${id}`);
   },
 };
