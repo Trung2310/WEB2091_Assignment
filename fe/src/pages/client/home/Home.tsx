@@ -1,8 +1,16 @@
+// src/pages/client/Home.tsx
 import React, { useEffect, useState } from 'react';
-import  Product  from '../product/Products'; 
+import Product from '../product/Products';
+
+interface ProductData {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+}
 
 const Home: React.FC = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<ProductData[]>([]);
 
   useEffect(() => {
     fetch('http://localhost:3001/products')
@@ -14,9 +22,13 @@ const Home: React.FC = () => {
     <div>
       <h1>Sản phẩm nổi bật</h1>
       <div className="product-list">
-        {products.map((product) => (
-          <Product key={product.id} product={product} />
-        ))}
+        {products.length === 0 ? (
+          <p>Không có sản phẩm nào.</p> 
+        ) : (
+          products.map((product) => (
+            <Product key={product.id} product={product} />
+          ))
+        )}
       </div>
     </div>
   );
