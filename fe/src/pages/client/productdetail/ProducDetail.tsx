@@ -1,4 +1,3 @@
-// src/pages/client/ProductDetail.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -7,7 +6,7 @@ const ProductDetail: React.FC = () => {
   const [product, setProduct] = useState<any>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/products/${id}`)
+    fetch(`http://localhost:3001/products/${id}`)
       .then((response) => response.json())
       .then((data) => setProduct(data));
   }, [id]);

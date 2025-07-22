@@ -21,10 +21,10 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Đăng ký tài khoản</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>} {/* Hiển thị thông báo lỗi nếu có */}
-      {success && <div style={{ color: 'green' }}>{success}</div>} {/* Hiển thị thông báo thành công nếu có */}
+      {error && <div className="error-message">{error}</div>} {/* Hiển thị thông báo lỗi nếu có */}
+      {success && <div className="success-message">{success}</div>} {/* Hiển thị thông báo thành công nếu có */}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Tên đầy đủ:</label>
@@ -53,7 +53,8 @@ const Register: React.FC = () => {
             required
           />
         </div>
-        <button type="submit">Đăng ký</button>
+        {/* Thêm class riêng cho button */}
+        <button className="register-button" type="submit">Đăng ký</button>
       </form>
     </div>
   );

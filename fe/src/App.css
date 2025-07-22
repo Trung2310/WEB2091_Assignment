@@ -42,7 +42,7 @@
   color: #888;
 }
 
-/* src/App.css hoặc src/styles/clientLayout.css */
+
 
 .client-layout {
   min-height: 100vh;
@@ -90,3 +90,105 @@
   color: #ccc;
 }
 
+.form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;  
+  color: #333; 
+}
+
+
+input:focus {
+  border-color: #646cff;  
+  outline: none;
+  background-color: #f7f7f7;  
+}
+
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background: #fff;  
+  color: #333;  
+  font-size: 16px;
+  border: 1px solid #ddd;  
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;  
+}
+
+.login-button:hover {
+  background-color: #646cff;  
+  color: #fff;  
+  border-color: #646cff;  
+}
+
+
+.register-button {
+  width: 100%;
+  padding: 12px;
+  background: #fff;  
+  color: #333;  
+  font-size: 16px;
+  border: 1px solid #ddd;  
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;  
+}
+
+.register-button:hover {
+  background-color: #646cff;  
+  color: #fff;  
+  border-color: #646cff;  
+}
+
+
+.error-message {
+  color: red;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.success-message {
+  color: green;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 10px;
+  }
+}

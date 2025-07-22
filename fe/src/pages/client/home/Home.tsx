@@ -1,4 +1,3 @@
-// src/pages/client/Home.tsx
 import React, { useEffect, useState } from 'react';
 import  Product  from '../product/Products'; 
 

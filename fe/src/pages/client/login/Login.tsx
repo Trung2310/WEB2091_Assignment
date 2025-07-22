@@ -23,9 +23,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <h2>Đăng nhập</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>} {/* Hiển thị thông báo lỗi nếu có */}
+      {error && <div className="error-message">{error}</div>} {/* Hiển thị thông báo lỗi nếu có */}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
@@ -45,7 +45,8 @@ const Login: React.FC = () => {
             required
           />
         </div>
-        <button type="submit">Đăng nhập</button>
+        {/* Thêm class riêng cho button */}
+        <button className="login-button" type="submit">Đăng nhập</button>
       </form>
     </div>
   );

@@ -1,4 +1,3 @@
-// src/layouts/client/ClientLayout.tsx
 import React from "react";
 import { Layout, Menu } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
@@ -14,7 +13,7 @@ const ClientLayout: React.FC = () => {
     <Layout style={{ minHeight: "100vh" }}>
       {/* Sidebar */}
       <Sider breakpoint="lg" collapsedWidth="0" theme="light">
-        <div className="text-center py-3 fs-5 fw-bold">Website Giày Thể Thao</div>
+        <div className="text-center py-3 fs-5 fw-bold">Client</div>
         <Menu
           mode="inline"
           selectedKeys={[location.pathname]}
@@ -41,7 +40,7 @@ const ClientLayout: React.FC = () => {
           }}
         >
           <h5 className="mb-0" style={{ margin: "0 auto" }}>
-            Chào mừng đến với website giày thể thao
+            Giày Thể Thao S-Space
           </h5>
         </Header>
 
