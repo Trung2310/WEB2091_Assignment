@@ -3,17 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, Input, Button, Table, Modal, Form, Select, Collapse, message } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { userService, type User } from '../../../services/UserService';
-
-const { Panel } = Collapse;
 const { Option } = Select;
-
-// interface User {
-//   id: string;
-//   fullName: string;
-//   email: string;
-//   role: 'admin' | 'staff' | 'user';
-//   isActive: boolean;
-// }
 
 const UserManager: React.FC = () => {
   const [form] = Form.useForm();
@@ -23,7 +13,6 @@ const UserManager: React.FC = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [searchText, setSearchText] = useState('');
-  const [activeKey, setActiveKey] = useState<string | string[]>();
 
   const { data: users = [] } = useQuery<User[]>({
     queryKey: ['users', searchText],
