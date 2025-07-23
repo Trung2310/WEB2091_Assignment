@@ -1,6 +1,6 @@
 import api from '../configs/api';
 
-interface OrderItem {
+export interface OrderItem {
   productId: string;
   name: string;
   size: number;
@@ -9,7 +9,7 @@ interface OrderItem {
   price: number;
 }
 
-interface Order {
+export interface Order {
   id: string;
   userId: string;
   userName: string;
