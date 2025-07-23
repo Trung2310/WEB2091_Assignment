@@ -4,21 +4,19 @@
       "fullName": "Nguyễn Văn A1",
       "email": "a@example.com",
       "role": "admin",
-      "isActive": false,
+      "isActive": true,
       "id": "1"
     },
     {
-      "id": "2",
       "fullName": "Trần Thị B",
       "email": "b@example.com",
-      "role": "user",
-      "isActive": false
+      "role": "staff",
+      "id": "2"
     }
   ],
   "products": [
     {
-      "id": "PROD1001",
-      "name": "Nike Air Zoom Pegasus 38",
+      "name": "Nike Air Zoom Pegasus 37",
       "price": 2900000,
       "color": "Black/White",
       "brandId": 1,
@@ -33,7 +31,8 @@
       "image": "https://picsum.dev/300/200",
       "stock": 10,
       "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
-      "isAvailable": true
+      "isAvailable": true,
+      "id": "PROD1001"
     },
     {
       "id": "PROD1002",
@@ -55,80 +54,16 @@
       "isAvailable": true
     },
     {
-      "id": "PROD1003",
-      "name": "Converse Chuck Taylor All Star",
-      "price": 1500000,
-      "color": "White",
-      "brandId": 3,
-      "categoryId": 2,
+      "name": "KaezahaT24",
+      "price": 33,
+      "color": "Black/White",
+      "brandId": "2",
+      "categoryId": "d808",
       "size": [
-        36,
-        37,
-        38,
-        39,
-        40
+        "33"
       ],
-      "image": "https://picsum.dev/300/200",
-      "stock": 20,
-      "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
-      "isAvailable": true
-    },
-    {
-      "id": "PROD1004",
-      "name": "Converse Chuck Taylor All Star",
-      "price": 1500000,
-      "color": "White",
-      "brandId": 3,
-      "categoryId": 2,
-      "size": [
-        36,
-        37,
-        38,
-        39,
-        40
-      ],
-      "image": "https://picsum.dev/300/200",
-      "stock": 20,
-      "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
-      "isAvailable": true
-    },
-    {
-      "id": "PROD1005",
-      "name": "Converse Chuck Taylor All Star",
-      "price": 1500000,
-      "color": "White",
-      "brandId": 3,
-      "categoryId": 2,
-      "size": [
-        36,
-        37,
-        38,
-        39,
-        40
-      ],
-      "image": "https://picsum.dev/300/200",
-      "stock": 20,
-      "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
-      "isAvailable": true
-    },
-    {
-      "id": "PROD1006",
-      "name": "Converse Chuck Taylor All Star",
-      "price": 1500000,
-      "color": "White",
-      "brandId": 3,
-      "categoryId": 2,
-      "size": [
-        36,
-        37,
-        38,
-        39,
-        40
-      ],
-      "image": "https://picsum.dev/300/200",
-      "stock": 20,
-      "description": "Phong cách cổ điển, phù hợp nhiều loại trang phục.",
-      "isAvailable": true
+      "stock": 33,
+      "id": "PROD5993"
     }
   ],
   "categories": [

@@ -1,133 +1,161 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Typography, Tag, Tooltip, Button, message, Dropdown, type MenuProps } from 'antd';
-import { orderService } from '../../../services/OrderService';
+import React from 'react';
+import {
+  Table,
+  Card,
+  Tag,
+  Tooltip,
+  Button,
+  message,
+  Dropdown,
+  type MenuProps,
+} from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { orderService } from '../../../services/OrderService';
 
 interface OrderItem {
-    productId: string;
-    name: string;
-    size: number;
-    color: string;
-    quantity: number;
-    price: number;
+  productId: string;
+  name: string;
+  size: number;
+  color: string;
+  quantity: number;
+  price: number;
 }
 
 interface Order {
-    id: string;
-    userId: string;
-    userName: string;
-    items: OrderItem[];
-    total: number;
-    status: 'Pending' | 'Completed' | 'Cancelled';
-    createdAt: string;
+  id: string;
+  userId: string;
+  userName: string;
+  items: OrderItem[];
+  total: number;
+  status: 'Pending' | 'Completed' | 'Cancelled';
+  createdAt: string;
 }
 
+const statusOptions: Order['status'][] = ['Pending', 'Completed', 'Cancelled'];
+
+const statusColors: Record<Order['status'], string> = {
+  Pending: 'orange',
+  Completed: 'green',
+  Cancelled: 'red',
+};
+
 const OrderManager: React.FC = () => {
-    const [orders, setOrders] = useState<Order[]>([]);
+  const queryClient = useQueryClient();
 
-    const statusOptions: Order["status"][] = ['Pending', 'Completed', 'Cancelled'];
+  const { data: orders, isLoading } = useQuery({
+    queryKey: ['orders'],
+    queryFn: orderService.getAll,
+  });
 
-    const statusColors: Record<string, string> = {
-        Pending: 'orange',
-        Completed: 'green',
-        Cancelled: 'red',
-    };
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: Order['status'] }) =>
+      orderService.updateStatus(id, status),
+    onSuccess: (_, { id }) => {
+      message.success(`Đã cập nhật trạng thái đơn hàng ${id}`);
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
+    },
+    onError: () => {
+      message.error('Cập nhật thất bại');
+    },
+  });
 
-    const handleChangeStatus = async (id: string, newStatus: Order['status']) => {
-        try {
-            await orderService.updateStatus(id, newStatus);
-            message.success(`Đã cập nhật trạng thái đơn hàng ${id}`);
-            fetchOrders();
-        } catch (err) {
-            message.error('Cập nhật thất bại');
-        }
-    };
+  const handleChangeStatus = (id: string, newStatus: Order['status']) => {
+    updateStatusMutation.mutate({ id, status: newStatus });
+  };
 
-    const fetchOrders = async () => {
-        const res = await orderService.getAll();
-        setOrders(res);
-    };
+  return (
+    <Card title="Quản lý đơn hàng" style={{ margin: 20 }}>
+      <Table
+        loading={isLoading}
+        dataSource={orders}
+        rowKey="id"
+        columns={[
+          { title: 'ID', dataIndex: 'id', width: 60 },
+          {
+            title: 'Khách hàng',
+            dataIndex: 'userId',
+            render: (_: string, record: Order) =>
+              `[${record.userId}]  ${record.userName}`,
+          },
+          {
+            title: 'Tổng tiền',
+            dataIndex: 'total',
+            render: (v) =>
+              `${new Intl.NumberFormat('vi-VN').format(v)} VND`,
+          },
+          { title: 'Ngày tạo', dataIndex: 'createdAt' },
+          {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            render: (status: Order['status'], record: Order) => {
+              const items: MenuProps['items'] = statusOptions.map((s) => ({
+                key: s,
+                label: (
+                  <Tag color={statusColors[s]}>
+                    {s.toUpperCase()}
+                  </Tag>
+                ),
+                onClick: () => handleChangeStatus(record.id, s),
+              }));
 
-    useEffect(() => {
-        fetchOrders();
-    }, []);
-
-    return (
-        <div style={{ padding: 20 }}>
-            <Typography.Title level={2}>Quản lý đơn hàng</Typography.Title>
-
-            <Table dataSource={orders} rowKey="id" columns={[
-                { title: 'ID', dataIndex: 'id', width: 60 },
-                { title: 'Khách hàng', dataIndex: 'userId', render: (_: string, record: any) => `[${record.userId}]  ${record.userName}` },
-                {
-                    title: 'Tổng tiền',
-                    dataIndex: 'total',
-                    render: (v) => `${new Intl.NumberFormat('vi-VN').format(v)} VND`
-                },
-                { title: 'Ngày tạo', dataIndex: 'createdAt' },
-                {
-                    title: 'Trạng thái',
-                    dataIndex: 'status',
-                    render: (status: string, record: Order) => {
-                        const items: MenuProps['items'] = statusOptions.map(s => ({
-                            key: s,
-                            label: (
-                                <Tag color={statusColors[s as Order["status"]]}>
-                                    {s.toUpperCase()}
-                                </Tag>
-                            ),
-                            onClick: () => handleChangeStatus(record.id, s as Order["status"]),
-                        }));
-
-                        return (
-                            <span>
-                                <Tag color={statusColors[status]} style={{ marginRight: 8 }}>
-                                    {status.toUpperCase()}
-                                </Tag>
-                                <Dropdown menu={{ items }} trigger={['click']}>
-                                    <Button type="text" size="small" icon={<ReloadOutlined />} />
-                                </Dropdown>
-                            </span>
-                        );
-                    }
-                }
-
-            ]}
-                expandable={{
-                    expandedRowRender: (record: Order) => (
-                        <div style={{ background: '#f6f6f6', padding: 16 }}>
-                            <Typography.Title level={5}>🛒 Chi tiết đơn hàng</Typography.Title>
-                            <Table
-                                dataSource={record.items}
-                                rowKey="productId"
-                                pagination={false}
-                                size="small"
-                                columns={[
-                                    { title: 'Mã sản phẩm', dataIndex: 'productId' },
-                                    { title: 'Tên sản phẩm', dataIndex: 'name' },
-                                    { title: 'Size', dataIndex: 'size' },
-                                    { title: 'Màu sắc', dataIndex: 'color' },
-                                    { title: 'Số lượng', dataIndex: 'quantity' },
-                                    {
-                                        title: 'Đơn giá',
-                                        dataIndex: 'price',
-                                        render: (price: number) => `${new Intl.NumberFormat('vi-VN').format(price)} VND`,
-                                    },
-                                    {
-                                        title: 'Thành tiền',
-                                        key: 'total',
-                                        render: (_, item) => `${new Intl.NumberFormat('vi-VN').format(item.quantity * item.price)} VND`,
-                                    },
-                                ]}
-                            />
-                        </div>
-                    ),
-                    rowExpandable: () => true,
-                }}
-
-            />
-        </div>
-    );
+              return (
+                <span>
+                  <Tag
+                    color={statusColors[status]}
+                    style={{ marginRight: 8 }}
+                  >
+                    {status.toUpperCase()}
+                  </Tag>
+                  <Dropdown menu={{ items }} trigger={['click']}>
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<ReloadOutlined />}
+                      loading={updateStatusMutation.isPending}
+                    />
+                  </Dropdown>
+                </span>
+              );
+            },
+          },
+        ]}
+        expandable={{
+          expandedRowRender: (record: Order) => (
+            <Card type="inner" title="🛒 Chi tiết đơn hàng">
+              <Table
+                dataSource={record.items}
+                rowKey="productId"
+                pagination={false}
+                size="small"
+                columns={[
+                  { title: 'Mã sản phẩm', dataIndex: 'productId' },
+                  { title: 'Tên sản phẩm', dataIndex: 'name' },
+                  { title: 'Size', dataIndex: 'size' },
+                  { title: 'Màu sắc', dataIndex: 'color' },
+                  { title: 'Số lượng', dataIndex: 'quantity' },
+                  {
+                    title: 'Đơn giá',
+                    dataIndex: 'price',
+                    render: (price: number) =>
+                      `${new Intl.NumberFormat('vi-VN').format(price)} VND`,
+                  },
+                  {
+                    title: 'Thành tiền',
+                    key: 'total',
+                    render: (_, item) =>
+                      `${new Intl.NumberFormat('vi-VN').format(
+                        item.quantity * item.price
+                      )} VND`,
+                  },
+                ]}
+              />
+            </Card>
+          ),
+        }}
+      />
+    </Card>
+  );
 };
 
 export default OrderManager;

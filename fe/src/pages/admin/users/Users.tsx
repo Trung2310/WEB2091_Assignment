@@ -1,145 +1,174 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Popconfirm, Select } from 'antd';
-import api from '../../../configs/api';
-import { userService } from '../../../services/UserService';
-
-interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
-  isActive: boolean;
-}
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Card, Input, Button, Table, Modal, Form, Select, Collapse, message } from 'antd';
+import { UserAddOutlined } from '@ant-design/icons';
+import { userService, type User } from '../../../services/UserService';
+const { Option } = Select;
 
 const UserManager: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [form] = Form.useForm();
+  const queryClient = useQueryClient();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [form] = Form.useForm();
+  const [searchText, setSearchText] = useState('');
 
-  const fetchUsers = async () => {
-    const res = await userService.getAll();
-    setUsers(res);
-  };
+  const { data: users = [] } = useQuery<User[]>({
+    queryKey: ['users', searchText],
+    queryFn: () => userService.getAll(searchText),
+  });
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const addUserMutation = useMutation({
+    mutationFn: (data: Partial<User>) => userService.add(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setIsModalOpen(false);
+    },
+  });
 
-  const handleAdd = () => {
-    form.resetFields();
+  const updateUserMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<User> }) =>
+      userService.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      setIsModalOpen(false);
+    },
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: (id: string) => userService.remove(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+
+  const showModal = () => {
+    setIsModalOpen(true);
     setIsEdit(false);
-    setIsModalOpen(true);
+    form.resetFields();
+    setEditingUser(null);
   };
 
-  const handleEdit = (record: User) => {
+  const handleEdit = (user: User) => {
+    setIsModalOpen(true);
     setIsEdit(true);
-    setEditingUser(record);
-    form.setFieldsValue(record);
-    setIsModalOpen(true);
+    form.setFieldsValue(user);
+    setEditingUser(user);
   };
 
-  const handleDelete = async (id: string) => {
-    await userService.remove(id);
-    fetchUsers();
+  const handleDelete = (id: string) => {
+    Modal.confirm({
+      title: 'Xác nhận xoá',
+      content: 'Bạn có chắc muốn xoá người dùng này?',
+      okText: 'Xoá',
+      cancelText: 'Huỷ',
+      onOk: () => deleteUserMutation.mutate(id),
+    });
   };
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
-
     if (isEdit && editingUser) {
-      await userService.update(editingUser.id, values);
+      updateUserMutation.mutate({ id: editingUser.id, data: values });
     } else {
-      await userService.add(values);
+      addUserMutation.mutate(values);
     }
+  };
 
-    setIsModalOpen(false);
-    fetchUsers();
+  const handleSearch = () => {
+    queryClient.invalidateQueries({ queryKey: ['users'] });
   };
 
   const columns = [
     {
       title: 'ID',
       dataIndex: 'id',
-      width: 60,
+      key: 'id',
     },
     {
-      title: 'Họ tên',
+      title: 'Tên',
       dataIndex: 'fullName',
+      key: 'fullName',
     },
     {
       title: 'Email',
       dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'Vai trò',
       dataIndex: 'role',
+      key: 'role',
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'isActive',
-      render: (active: boolean) => (active ? 'Hoạt động' : 'Ngưng'),
-    },
-    {
-      title: 'Thao tác',
+      title: 'Hành động',
+      key: 'actions',
       render: (_: any, record: User) => (
-        <Space>
-          <Button onClick={() => handleEdit(record)}>Sửa</Button>
-          <Popconfirm
-            title="Xác nhận xóa người dùng?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
-          >
-            <Button danger>Xóa</Button>
-          </Popconfirm>
-        </Space>
+        <>
+          <Button onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>
+            Sửa
+          </Button>
+          <Button danger onClick={() => handleDelete(record.id)}>
+            Xoá
+          </Button>
+        </>
       ),
     },
   ];
 
   return (
-    <div style={{ padding: 20 }}>
-      <h2 style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <span>Quản lý người dùng</span>
-        <Button type="primary" onClick={handleAdd}>
-          Thêm người dùng
+    <Card title="Quản lý người dùng">
+      <div style={{ textAlign: 'right', marginBottom: 16 }}>
+        <Button
+          type="primary"
+          icon={<UserAddOutlined />}
+          onClick={showModal}>
+          Thêm sản phẩm
         </Button>
-      </h2>
+      </div>
 
-      <Table dataSource={users} columns={columns} rowKey="id" />
+      <Input.Search
+        placeholder="Tìm kiếm..."
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+        onSearch={handleSearch}
+        enterButton
+        style={{ maxWidth: 300, marginBottom: 16 }}
+      />
+
+      <Table
+        dataSource={users}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 5 }}
+      />
 
       <Modal
-        title={isEdit ? 'Chỉnh sửa người dùng' : 'Thêm người dùng'}
+        title={isEdit ? 'Cập nhật người dùng' : 'Thêm người dùng'}
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
         onOk={handleSubmit}
-        okText={isEdit ? 'Cập nhật' : 'Thêm'}
+        onCancel={() => setIsModalOpen(false)}
+        okText="Lưu"
+        cancelText="Huỷ"
       >
-        <Form layout="vertical" form={form}>
-          <Form.Item name="fullName" label="Họ tên" rules={[{ required: true }]}>
+        <Form form={form} layout="vertical">
+          <Form.Item name="fullName" label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email' }]}>
+          <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Vui lòng nhập email' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="role" label="Vai trò" rules={[{ required: true }]}>
+          <Form.Item name="role" label="Vai trò" rules={[{ required: true, message: 'Chọn vai trò' }]}>
             <Select>
-              <Select.Option value="admin">Quản trị</Select.Option>
-              <Select.Option value="staff">Nhân viên</Select.Option>
-              <Select.Option value="user">Người dùng</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item name="isActive" label="Trạng thái">
-            <Select>
-              <Select.Option value={true}>Hoạt động</Select.Option>
-              <Select.Option value={false}>Ngưng</Select.Option>
+              <Option value="admin">Admin</Option>
+              <Option value="customer">Customer</Option>
+              <Option value="staff">Staff</Option>
             </Select>
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </Card>
   );
 };
 

@@ -1,28 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, Space, Popconfirm, Typography } from 'antd';
-import { brandService } from '../../../services/BrandService';
-
-interface Brand {
-  id: number;
-  name: string;
-  origin?: string;
-}
+import React, { useState } from 'react';
+import { Table, Button, Modal, Form, Input, Space, Popconfirm, Typography, message, Card } from 'antd';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { brandService, type Brand } from '../../../services/BrandService';
 
 const BrandManager: React.FC = () => {
-  const [brands, setBrands] = useState<Brand[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [editingBrand, setEditingBrand] = useState<Brand | null>(null);
   const [form] = Form.useForm();
 
-  const fetchBrands = async () => {
-    const res = await brandService.getAll();
-    setBrands(res);
-  };
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetchBrands();
-  }, []);
+  const { data: brands, isLoading } = useQuery({
+    queryKey: ['brands'],
+    queryFn: brandService.getAll,
+  });
+
+  const addMutation = useMutation({
+    mutationFn: brandService.add,
+    onSuccess: () => {
+      message.success('Đã thêm thương hiệu');
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
+      setIsModalOpen(false);
+    },
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: Partial<Brand> }) =>
+      brandService.update(id, data),
+    onSuccess: () => {
+      message.success('Đã cập nhật thương hiệu');
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
+      setIsModalOpen(false);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => brandService.remove(id),
+    onSuccess: () => {
+      message.success('Đã xóa thương hiệu');
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
+    },
+  });
 
   const handleAdd = () => {
     form.resetFields();
@@ -37,52 +56,55 @@ const BrandManager: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: number) => {
-    await brandService.remove(id);
-    fetchBrands();
+  const handleDelete = (id: number) => {
+    deleteMutation.mutate(id);
   };
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
+
     if (isEdit && editingBrand) {
-      await brandService.update(editingBrand.id, values);
+      updateMutation.mutate({ id: editingBrand.id, data: values });
     } else {
-      await brandService.add(values);
+      addMutation.mutate(values);
     }
-    setIsModalOpen(false);
-    fetchBrands();
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <Typography.Title level={2}>Quản lý thương hiệu</Typography.Title>
+    <Card title="Quản lý thương hiệu" style={{ margin: 20 }}>
 
       <div style={{ textAlign: 'right', marginBottom: 16 }}>
         <Button type="primary" onClick={handleAdd}>Thêm thương hiệu</Button>
       </div>
 
-      <Table dataSource={brands} rowKey="id" columns={[
-        { title: 'ID', dataIndex: 'id', width: 60 },
-        { title: 'Tên thương hiệu', dataIndex: 'name' },
-        { title: 'Xuất xứ', dataIndex: 'origin' },
-        {
-          title: 'Thao tác',
-          render: (_, record) => (
-            <Space>
-              <Button onClick={() => handleEdit(record)}>Sửa</Button>
-              <Popconfirm title="Xác nhận xóa?" onConfirm={() => handleDelete(record.id)}>
-                <Button danger>Xóa</Button>
-              </Popconfirm>
-            </Space>
-          )
-        }
-      ]} />
+      <Table
+        dataSource={brands}
+        loading={isLoading}
+        rowKey="id"
+        columns={[
+          { title: 'ID', dataIndex: 'id', width: 60 },
+          { title: 'Tên thương hiệu', dataIndex: 'name' },
+          { title: 'Xuất xứ', dataIndex: 'origin' },
+          {
+            title: 'Thao tác',
+            render: (_, record) => (
+              <Space>
+                <Button onClick={() => handleEdit(record)}>Sửa</Button>
+                <Popconfirm title="Xác nhận xóa?" onConfirm={() => handleDelete(record.id)}>
+                  <Button danger loading={deleteMutation.isPending}>Xóa</Button>
+                </Popconfirm>
+              </Space>
+            ),
+          },
+        ]}
+      />
 
       <Modal
         title={isEdit ? 'Sửa thương hiệu' : 'Thêm thương hiệu'}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         onOk={handleSubmit}
+        confirmLoading={addMutation.isPending || updateMutation.isPending}
       >
         <Form form={form} layout="vertical">
           <Form.Item name="name" label="Tên thương hiệu" rules={[{ required: true }]}>
@@ -93,7 +115,7 @@ const BrandManager: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </Card>
   );
 };
 

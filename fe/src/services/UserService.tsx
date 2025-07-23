@@ -8,7 +8,6 @@ export interface User {
   isActive: boolean;
 }
 
-// Hàm tự tạo ID theo role
 const generateId = (role: string): string => {
   const prefix = {
     admin: 'ADM',
@@ -21,8 +20,12 @@ const generateId = (role: string): string => {
 };
 
 export const userService = {
-  getAll: async (): Promise<User[]> => {
-    const res = await api.get('/users');
+  getAll: async (search: any): Promise<User[]> => {
+    const res = await api.get('/users', {
+      params: {
+        q: search
+      }
+    });
     return res.data;
   },
 

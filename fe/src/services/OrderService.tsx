@@ -1,7 +1,7 @@
 import api from '../configs/api';
 import type { CartItem } from './CartService';
 
-interface OrderItem {
+export interface OrderItem {
   productId: string;
   name: string;
   size: number;
@@ -10,7 +10,7 @@ interface OrderItem {
   price: number;
 }
 
-interface Order {
+export interface Order {
   id: string;
   userId: string;
   userName: string;
