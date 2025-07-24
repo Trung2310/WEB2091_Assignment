@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Popconfirm, message } from "antd";
 import axios from "axios";
 
-const API_URL = 'http://localhost:3001/orders'; 
+const API_URL = 'http://localhost:3002/orders'; 
 
 interface Order {
   id: string;
@@ -25,7 +25,7 @@ const OrderList: React.FC = () => {
 
   const handleStatusUpdate = (orderId: string) => {
     // Cập nhật trạng thái đơn hàng (VD: chuyển sang "Đã giao")
-    axios.patch(`http://localhost:3001/orders/${orderId}`, { status: "Đã giao" })
+    axios.patch(`http://localhost:3002/orders/${orderId}`, { status: "Đã giao" })
       .then(() => {
         message.success("Cập nhật trạng thái đơn hàng thành công");
         setOrders(orders.map(order => 
@@ -37,7 +37,7 @@ const OrderList: React.FC = () => {
 
   const handleDelete = (orderId: string) => {
     // Xóa đơn hàng
-    axios.delete(`http://localhost:3001/orders/${orderId}`)
+    axios.delete(`http://localhost:3002/orders/${orderId}`)
       .then(() => {
         message.success("Đã xóa đơn hàng");
         setOrders(orders.filter(order => order.id !== orderId));

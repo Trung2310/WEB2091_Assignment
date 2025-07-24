@@ -1,7 +1,9 @@
+// src/layouts/client/ClientLayout.tsx
 import React from "react";
 import { Layout, Menu } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { HomeOutlined, ShoppingCartOutlined, LoginOutlined, UserAddOutlined } from "@ant-design/icons";
+import logo from "../../assets/images/logo/shoes.png";
 
 const { Header, Sider, Content } = Layout;
 
@@ -13,7 +15,9 @@ const ClientLayout: React.FC = () => {
     <Layout style={{ minHeight: "100vh" }}>
       {/* Sidebar */}
       <Sider breakpoint="lg" collapsedWidth="0" theme="light">
-        <div className="text-center py-3 fs-5 fw-bold">Client</div>
+        <div className="logo-container">
+          <img src={logo} alt="Giày Thể Thao" className="logo" /> {/* Hiển thị logo giày */}
+        </div>
         <Menu
           mode="inline"
           selectedKeys={[location.pathname]}
@@ -39,9 +43,9 @@ const ClientLayout: React.FC = () => {
             height: 64,
           }}
         >
-          <h5 className="mb-0" style={{ margin: "0 auto" }}>
+          <h1 className="mb-0" style={{ margin: "0 auto" }}>
             Giày Thể Thao S-Space
-          </h5>
+          </h1>
         </Header>
 
         {/* Content */}
