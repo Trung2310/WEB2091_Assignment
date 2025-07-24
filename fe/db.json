@@ -29,7 +29,7 @@
         42
       ],
       "image": "https://picsum.dev/300/200",
-      "stock": 10,
+      "stock": 13,
       "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
       "isAvailable": true,
       "id": "PROD1001"
@@ -49,21 +49,73 @@
         43
       ],
       "image": "https://picsum.dev/300/200",
-      "stock": 15,
+      "stock": 12,
       "description": "Giày hiệu suất cao với đệm Boost.",
       "isAvailable": true
     },
     {
-      "name": "KaezahaT24",
-      "price": 33,
+      "name": "Nike Air Zoom Pegasus 37",
+      "price": 4000000,
       "color": "Black/White",
-      "brandId": "2",
-      "categoryId": "d808",
+      "brandId": 1,
+      "categoryId": 1,
       "size": [
-        "33"
+        38,
+        39,
+        40
       ],
-      "stock": 33,
-      "id": "PROD5993"
+      "image": "https://picsum.dev/300/200",
+      "stock": 14,
+      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "isAvailable": true,
+      "id": "PROD1011"
+    },
+    {
+      "name": "Nike Air Zoom Pegasus 37",
+      "price": 5000000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        38
+      ],
+      "image": "https://picsum.dev/300/200",
+      "stock": 7,
+      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "isAvailable": true,
+      "id": "PROD1011"
+    },
+    {
+      "name": "Nike Air Zoom Pegasus 37",
+      "price": 2500000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        38,
+        39
+      ],
+      "image": "https://picsum.dev/300/200",
+      "stock": 25,
+      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "isAvailable": true,
+      "id": "PROD1012"
+    },
+    {
+      "name": "Nike Air Zoom Pegasus 37",
+      "price": 3500000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        41,
+        42
+      ],
+      "image": "https://picsum.dev/300/200",
+      "stock": 30,
+      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "isAvailable": true,
+      "id": "PROD1013"
     }
   ],
   "categories": [

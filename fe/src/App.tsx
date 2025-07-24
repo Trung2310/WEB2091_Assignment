@@ -16,6 +16,7 @@ import Register from "./pages/client/register/Register";
 import ProductDetail from "./pages/client/productdetail/ProducDetail";
 import Cart from "./pages/client/cart/Cart";
 import Order from "./pages/client/order/Order";
+import Categories from "./pages/client/categories/Categories";
 
 function App() {
   const router = createBrowserRouter([
@@ -77,6 +78,10 @@ function App() {
           path: "order",
           element: <Order /> 
         },
+        {
+          path: "categories",
+          element: <Categories />  
+        }
       ],
     },
     {
