@@ -38,28 +38,31 @@ export const orderService = {
     return res.data;
   },
 
-  // Client: Tạo đơn hàng từ giỏ hàng
-  createOrder: async (cart: CartItem[], userId: string, userName: string): Promise<Order> => {
-    const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-    const newOrder: Order = {
-      id: Math.floor(10000 + Math.random() * 90000).toString(),
-      userId,
-      userName,
-      items: cart.map(item => ({
-        productId: item.product.id,
-        name: item.product.name,
-        size: item.product.size ? item.product.size[0] : 0, // Chọn size đầu tiên trong mảng
-        color: item.product.color,
-        quantity: item.quantity,
-        price: item.product.price,
-      })),
-      total,
-      status: 'Pending',
-      createdAt: new Date().toISOString(),
-    };
+  createOrder: async (newOrder: any): Promise<Order> => {
     const res = await api.post('/orders', newOrder);
     return res.data;
   },
+  // createOrder: async (cart: CartItem[], userId: string, userName: string): Promise<Order> => {
+  //   const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  //   const newOrder: Order = {
+  //     id: Math.floor(10000 + Math.random() * 90000).toString(),
+  //     userId,
+  //     userName,
+  //     items: cart.map(item => ({
+  //       productId: item.product.id,
+  //       name: item.product.name,
+  //       size: item.product.size ? item.product.size[0] : 0, // Chọn size đầu tiên trong mảng
+  //       color: item.product.color,
+  //       quantity: item.quantity,
+  //       price: item.product.price,
+  //     })),
+  //     total,
+  //     status: 'Pending',
+  //     createdAt: new Date().toISOString(),
+  //   };
+  //   const res = await api.post('/orders', newOrder);
+  //   return res.data;
+  // },
 
   add: async (order: Omit<Order, 'id' | 'createdAt'>): Promise<Order> => {
     const newOrder: Order = {

@@ -2,17 +2,19 @@ import api from '../configs/api';
 import qs from 'qs';
 
 export interface Product {
-  id: string; 
+  id: string;
   name: string;
   price: number;
   color: string;
   brandId?: number;
   categoryId?: number;
   size?: number[];
-  image: string; 
+  image: string;
   stock?: number;
   description?: string;
   isAvailable?: boolean;
+  brand?: { id: number; name: string };
+  category?: { id: number; name: string };
 }
 
 export const productService = {
@@ -22,7 +24,7 @@ export const productService = {
         q: search,
         _expand: ['brand', 'category'],
       },
-      paramsSerializer: params => qs.stringify(params, {arrayFomat: 'repeat'})
+      paramsSerializer: params => qs.stringify(params, { arrayFomat: 'repeat' })
     });
     return res.data;
   },
@@ -47,4 +49,9 @@ export const productService = {
   remove: async (id: string): Promise<void> => {
     await api.delete(`products/${id}`);
   },
+
+  getByCategory: async (categoryId: number, limit = 3) => {
+    const res = await api.get(`/products?categoryId=${categoryId}&_limit=${limit}`);
+    return await res.data;
+  }
 };
