@@ -125,7 +125,9 @@
       ],
       "total": 5100,
       "status": "Pending",
-      "createdAt": "2025-07-17T08:00:00Z"
+      "createdAt": "2025-07-17T08:00:00Z",
+      "completedAt": null,
+      "cancelledAt": null
     },
     {
       "id": "ORD1002",
@@ -143,10 +145,32 @@
       ],
       "total": 80,
       "status": "Cancelled",
-      "createdAt": "2025-07-15T10:30:00Z"
+      "createdAt": "2025-07-15T10:30:00Z",
+      "completedAt": null,
+      "cancelledAt": "2025-07-24T13:27:43.540Z"
     },
     {
-      "id": "ORD1002",
+      "id": "ORD1003",
+      "userId": "2",
+      "userName": "Lam",
+      "items": [
+        {
+          "productId": "PROD1003",
+          "name": "Converse Chuck Taylor",
+          "size": 43,
+          "color": "Red",
+          "quantity": 1,
+          "price": 800
+        }
+      ],
+      "total": 800,
+      "status": "Completed",
+      "createdAt": "2025-03-15T10:30:00Z",
+      "completedAt": "2025-07-24T13:27:51.646Z",
+      "cancelledAt": null
+    },
+    {
+      "id": "ORD1004",
       "userId": "2",
       "userName": "Lam",
       "items": [
@@ -161,7 +185,9 @@
       ],
       "total": 80,
       "status": "Completed",
-      "createdAt": "2025-03-15T10:30:00Z"
+      "createdAt": "2025-03-15T10:30:00Z",
+      "completedAt": "2025-03-24T13:27:51.646Z",
+      "cancelledAt": null
     }
   ]
 }

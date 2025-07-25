@@ -17,6 +17,8 @@ export interface Order {
   total: number;
   status: 'Pending' | 'Completed' | 'Cancelled';
   createdAt: string;
+  completedAt: string;
+  cancelledAt: string;
 }
 
 export const orderService = {
@@ -49,7 +51,21 @@ export const orderService = {
     await api.delete(`/orders/${id}`);
   },
 
-   updateStatus: async (id: string, status: string) => {
-    return await api.patch(`/orders/${id}`, { status });
-  },
+  updateStatus: async (id: string, status: 'Pending' | 'Completed' | 'Cancelled') => {
+    const now = new Date().toISOString();
+    let updateData: any = { status };
+
+    if (status === 'Completed') {
+      updateData.completedAt = now;
+      updateData.cancelledAt = null;
+    } else if (status === 'Cancelled') {
+      updateData.cancelledAt = now;
+      updateData.completedAt = null;
+    } else {
+      updateData.completedAt = null;
+      updateData.cancelledAt = null;
+    }
+
+    return await api.patch(`/orders/${id}`, updateData);
+  }
 };
