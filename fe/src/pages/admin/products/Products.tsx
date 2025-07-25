@@ -28,7 +28,7 @@ const ProductManager: React.FC = () => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["products", searchText],
+    queryKey: ["products"],
     queryFn: fetchProducts,
   });
 

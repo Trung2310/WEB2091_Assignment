@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Card, Button, Typography, Image, message } from "antd";
+
+const { Title, Paragraph } = Typography;
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams();
@@ -27,7 +30,7 @@ const ProductDetail: React.FC = () => {
       image: product.image,
     });
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Đã thêm vào giỏ hàng!");
+    message.success("Đã thêm vào giỏ hàng!");
   };
 
   const handleBuyNow = () => {
@@ -41,9 +44,8 @@ const ProductDetail: React.FC = () => {
     });
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    // Giả lập lưu đơn hàng vào localStorage (có thể thay đổi sau này)
     const newOrder = {
-      id: `ORD${Math.floor(Math.random() * 9000) + 1000}`, // ID đơn hàng ngẫu nhiên
+      id: `ORD${Math.floor(Math.random() * 9000) + 1000}`,
       userId: "USR123",
       userName: "Nguyễn Văn A",
       items: [
@@ -69,20 +71,25 @@ const ProductDetail: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>{product.name}</h1>
-      <img src={product.image} alt={product.name} width={300} />
-      <p>Giá: {product.price} VND</p>
-      <p>Màu sắc: {product.color}</p>
-      <p>{product.description}</p>
+    <div style={{ padding: 24, display: "flex", justifyContent: "center" }}>
+      <Card
+        style={{ maxWidth: 600, width: "100%" }}
+        cover={<Image src={product.image} alt={product.name} />}
+      >
+        <Title level={2}>{product.name}</Title>
+        <Paragraph strong>Giá: {product.price.toLocaleString()} VND</Paragraph>
+        <Paragraph>Màu sắc: {product.color}</Paragraph>
+        <Paragraph>{product.description}</Paragraph>
 
-      <button onClick={handleAddToCart} className="add-to-cart-button">
-        Thêm vào giỏ hàng
-      </button>
-
-      <button onClick={handleBuyNow} className="buy-now-button">
-        Mua ngay
-      </button>
+        <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
+          <Button type="primary" onClick={handleAddToCart}>
+            Thêm vào giỏ hàng
+          </Button>
+          <Button danger onClick={handleBuyNow}>
+            Mua ngay
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 };

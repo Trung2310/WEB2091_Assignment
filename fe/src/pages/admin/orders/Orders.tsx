@@ -11,26 +11,7 @@ import {
 } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { orderService } from '../../../services/OrderService';
-
-interface OrderItem {
-  productId: string;
-  name: string;
-  size: number;
-  color: string;
-  quantity: number;
-  price: number;
-}
-
-interface Order {
-  id: string;
-  userId: string;
-  userName: string;
-  items: OrderItem[];
-  total: number;
-  status: 'Pending' | 'Completed' | 'Cancelled';
-  createdAt: string;
-}
+import { orderService, type Order } from '../../../services/OrderService';
 
 const statusOptions: Order['status'][] = ['Pending', 'Completed', 'Cancelled'];
 
@@ -101,12 +82,6 @@ const OrderManager: React.FC = () => {
 
               return (
                 <span>
-                  <Tag
-                    color={statusColors[status]}
-                    style={{ marginRight: 8 }}
-                  >
-                    {status.toUpperCase()}
-                  </Tag>
                   <Dropdown menu={{ items }} trigger={['click']}>
                     <Button
                       type="text"
@@ -115,6 +90,12 @@ const OrderManager: React.FC = () => {
                       loading={updateStatusMutation.isPending}
                     />
                   </Dropdown>
+                           <Tag
+                    color={statusColors[status]}
+                    style={{ marginRight: 8 }}
+                  >
+                    {status.toUpperCase()}
+                  </Tag>
                 </span>
               );
             },
@@ -122,7 +103,7 @@ const OrderManager: React.FC = () => {
         ]}
         expandable={{
           expandedRowRender: (record: Order) => (
-            <Card type="inner" title="🛒 Chi tiết đơn hàng">
+            <Card type="inner" title=" Chi tiết đơn hàng">
               <Table
                 dataSource={record.items}
                 rowKey="productId"
