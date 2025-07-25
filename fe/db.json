@@ -21,16 +21,10 @@
       "color": "Black/White",
       "brandId": 1,
       "categoryId": 1,
-      "size": [
-        38,
-        39,
-        40,
-        41,
-        42
-      ],
-      "image": "https://picsum.dev/300/200",
+      "size": [38, 39, 40, 41, 42],
+      "image": "https://bizweb.dktcdn.net/thumb/1024x1024/100/347/092/products/air-zoom-pegasus-37-flyease-ck8474-003-01.jpg",
       "stock": 13,
-      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "description": "Nike Air Zoom Pegasus 37 là một đôi giày thể thao được thiết kế đặc biệt để mang lại sự thoải mái và hỗ trợ tối ưu trong mỗi bước chạy. Được trang bị công nghệ Zoom Air tiên tiến, đôi giày này không chỉ mang lại cảm giác nhẹ nhàng, linh hoạt mà còn đảm bảo độ đàn hồi tuyệt vời, giúp bạn hoàn thiện mọi bài tập chạy một cách dễ dàng. Với thiết kế bắt mắt, phối màu đen và trắng thanh lịch, đôi giày này cũng phù hợp với những buổi đi dạo hoặc dạo phố. Chắc chắn là một lựa chọn lý tưởng cho những ai đam mê thể thao và yêu thích sự năng động.",
       "isAvailable": true,
       "id": "PROD1001"
     },
@@ -41,79 +35,61 @@
       "color": "Core Black",
       "brandId": 2,
       "categoryId": 1,
-      "size": [
-        39,
-        40,
-        41,
-        42,
-        43
-      ],
-      "image": "https://picsum.dev/300/200",
+      "size": [39, 40, 41, 42, 43],
+      "image": "https://cdn-images.farfetch-contents.com/19/43/49/22/19434922_43282895_1000.jpg",
       "stock": 12,
-      "description": "Giày hiệu suất cao với đệm Boost.",
+      "description": "Adidas Ultraboost 22 là mẫu giày chạy bộ đỉnh cao của Adidas, mang lại cảm giác cực kỳ êm ái và hỗ trợ tối đa trong mỗi bước đi. Được trang bị công nghệ đệm Boost độc quyền, đôi giày này giúp tăng cường sự linh hoạt và độ đàn hồi, đồng thời cung cấp khả năng hấp thụ lực cực kỳ hiệu quả. Với thiết kế màu đen sang trọng, đôi giày này không chỉ lý tưởng cho việc chạy bộ mà còn hoàn hảo cho các hoạt động thể thao khác, đảm bảo cả sự thoải mái và thời trang.",
       "isAvailable": true
     },
     {
-      "name": "Nike Air Zoom Pegasus 37",
+      "name": "Nike Air Max 270",
       "price": 4000000,
       "color": "Black/White",
       "brandId": 1,
       "categoryId": 1,
-      "size": [
-        38,
-        39,
-        40
-      ],
-      "image": "https://picsum.dev/300/200",
+      "size": [38, 39, 40],
+      "image": "https://static.nike.com/a/images/t_PDP_936_v1/f_auto,q_auto:eco/cb1951e7-0600-4f7a-9b26-12be8cd2bd01/W+AIR+MAX+270.png",
       "stock": 14,
-      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "description": "Nike Air Max 270 là đôi giày thể thao lý tưởng cho những người yêu thích sự thoải mái và tốc độ. Được trang bị công nghệ Zoom Air giúp giảm chấn và mang lại cảm giác đệm êm ái dưới bàn chân, giúp bạn chinh phục mọi cung đường chạy mà không gặp phải sự mệt mỏi. Thiết kế nhẹ nhàng và thoáng khí giúp cho đôi giày luôn mát mẻ, dễ chịu ngay cả khi phải hoạt động lâu dài. Với vẻ ngoài thể thao và thanh lịch, đây sẽ là người bạn đồng hành lý tưởng cho những buổi tập luyện cường độ cao.",
       "isAvailable": true,
       "id": "PROD1011"
     },
     {
-      "name": "Nike Air Zoom Pegasus 37",
+      "name": "Adidas NMD_R1",
       "price": 5000000,
       "color": "Black/White",
       "brandId": 1,
       "categoryId": 1,
-      "size": [
-        38
-      ],
-      "image": "https://picsum.dev/300/200",
+      "size": [38],
+      "image": "https://assets.adidas.com/images/w_600,f_auto,q_auto/0fd9bc2bfc234ce0b69aaef900fddbdf_9366/Giay_NMD_R1_DJen_HQ4452_01_standard.jpg",
       "stock": 7,
-      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "description": "Với thiết kế hiện đại và công nghệ vượt trội, Adidas NMD_R1 không chỉ là một đôi giày chạy bộ, mà còn là một sản phẩm mang lại sự trải nghiệm hoàn hảo trong từng bước đi. Đệm Zoom Air tích hợp giúp giày có độ đàn hồi và giảm chấn cực tốt, làm giảm áp lực lên các khớp khi chạy. Bên cạnh đó, khả năng thoáng khí của đôi giày giúp bạn luôn cảm thấy khô thoáng và dễ chịu dù phải di chuyển trong thời gian dài.",
       "isAvailable": true,
       "id": "PROD1011"
     },
     {
-      "name": "Nike Air Zoom Pegasus 37",
+      "name": "Puma Future Rider",
       "price": 2500000,
       "color": "Black/White",
       "brandId": 1,
       "categoryId": 1,
-      "size": [
-        38,
-        39
-      ],
-      "image": "https://picsum.dev/300/200",
+      "size": [38, 39],
+      "image": "https://product.hstatic.net/1000284478/product/14_393473_1_edf32e35bf914da8ad36a38b2f8f910d.jpg",
       "stock": 25,
-      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "description": "Puma Future Rider là sự kết hợp hoàn hảo giữa phong cách thể thao và hiệu suất vượt trội. Với thiết kế đệm Zoom Air đặc biệt, đôi giày giúp bạn có những bước chạy nhẹ nhàng và dễ dàng vượt qua mọi thử thách. Đặc biệt, lớp vải lưới ở phần trên của giày giúp đôi giày có khả năng thoáng khí, giữ cho đôi chân luôn khô thoáng và thoải mái. Bất kể là chạy bộ, đi bộ hay tham gia các hoạt động thể thao, đôi giày này đều mang đến sự dễ chịu tuyệt vời.",
       "isAvailable": true,
       "id": "PROD1012"
     },
     {
-      "name": "Nike Air Zoom Pegasus 37",
+      "name": "Reebok Nano X1",
       "price": 3500000,
       "color": "Black/White",
       "brandId": 1,
       "categoryId": 1,
-      "size": [
-        41,
-        42
-      ],
-      "image": "https://picsum.dev/300/200",
+      "size": [41, 42],
+      "image": "https://bizweb.dktcdn.net/100/347/092/products/nano-x1-men-s-training-shoes-white-gz5393-02-standard.jpg?v=1646676114020",
       "stock": 30,
-      "description": "Giày chạy bộ nhẹ, êm, đàn hồi tốt.",
+      "description": "Reebok Nano X1 là sự lựa chọn lý tưởng cho những ai yêu thích chạy bộ, với một thiết kế mang lại sự kết hợp hoàn hảo giữa sự thoải mái và phong cách. Công nghệ Zoom Air giúp đôi giày có khả năng giảm chấn và tăng độ linh hoạt, phù hợp cho những người cần sự hỗ trợ tốt khi chạy ở tốc độ cao. Phối màu đen trắng đẹp mắt giúp đôi giày phù hợp với nhiều loại trang phục thể thao và dạo phố, trở thành người bạn đồng hành lý tưởng cho các buổi tập luyện.",
       "isAvailable": true,
       "id": "PROD1013"
     }

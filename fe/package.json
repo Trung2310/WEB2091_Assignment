@@ -10,7 +10,6 @@
     "preview": "vite preview",
     "json-server": "json-server --watch db.json --port 3002",
     "start": "json-server --watch db.json --port 3002"
-
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
@@ -25,7 +24,7 @@
     "react": "^19.1.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.7.0"
+    "react-router-dom": "^7.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
