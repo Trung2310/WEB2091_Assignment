@@ -22,12 +22,11 @@ const ProductDetail: React.FC = () => {
 
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
+    cart.push({...product,
       quantity: 1,
-      image: product.image,
+      total: product.price,
+      size: product.size[0],
+      sizeList: product.size
     });
     localStorage.setItem("cart", JSON.stringify(cart));
     message.success("Đã thêm vào giỏ hàng!");
@@ -58,7 +57,7 @@ const ProductDetail: React.FC = () => {
           price: product.price,
         },
       ],
-      total: product.price,
+      total: product.price || 10,
       status: "Pending",
       createdAt: new Date().toISOString(),
     };

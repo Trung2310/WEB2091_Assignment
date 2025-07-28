@@ -1,53 +1,92 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  
-import { userService } from '../../../services/UserService'; 
+import { Form, Input, Button, Typography, Alert, Card } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { userService } from '../../../services/UserService';
+import { useAuth } from '../../../components/AuthContext';
+
+const { Title } = Typography;
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string>('');  
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [error, setError] = useState<string>('');
+  const { login } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const user = await userService.login(email, password);  // Gọi phương thức login từ userService
+  const loginMutation = useMutation({
+    mutationFn: async ({ email, password }: { email: string; password: string }) => {
+      const user: any = await userService.login(email, password);
+      return user;
+    },
+    onSuccess: (user) => {
       if (user) {
-        navigate('/');  
+        login(user);
+        navigate("/");
+        if (user?.role === 'customer') {
+          navigate('/');
+        } else if (user.role === 'admin' || user.role === 'staff') {
+          navigate('/admin');
+        } else {
+          navigate('/login');
+        }
       } else {
         setError('Đăng nhập thất bại, vui lòng kiểm tra lại email hoặc mật khẩu');
       }
-    } catch {
+    },
+    onError: () => {
       setError('Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại.');
-    }
+    },
+  });
+
+  const onFinish = (values: { email: string; password: string }) => {
+    setError('');
+    loginMutation.mutate(values);
   };
 
   return (
-    <div className="form-container">
-      <h2>Đăng nhập</h2>
-      {error && <div className="error-message">{error}</div>} {/* Hiển thị thông báo lỗi nếu có */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Mật khẩu:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {/* Thêm class riêng cho button */}
-        <button className="login-button" type="submit">Đăng nhập</button>
-      </form>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: "2%" }}>
+      <Card style={{ width: 400, padding: 24, boxShadow: '0 2px 12px rgba(0,0,0,0.1)' }}>
+        <Title level={3} style={{ textAlign: 'center' }}>
+          Đăng nhập
+        </Title>
+        {error && <Alert type="error" message={error} style={{ marginBottom: 16 }} />}
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: 'Vui lòng nhập email' },
+              { type: 'email', message: 'Email không hợp lệ' },
+            ]}
+          >
+            <Input placeholder="Nhập email" />
+          </Form.Item>
+
+          <Form.Item
+            label="Mật khẩu"
+            name="password"
+            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
+          >
+            <Input.Password placeholder="Nhập mật khẩu" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loginMutation.isPending}
+              block
+            >
+              Đăng nhập
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };

@@ -1,10 +1,12 @@
+import { useAuth } from '../components/AuthContext';
 import api from '../configs/api';
+import { orderService } from './OrderService';
 
 export interface User {
   id: string;
   fullName: string;
   email: string;
-  role: 'admin' | 'staff' | 'user';
+  role: 'admin' | 'staff' | 'customer';
   isActive: boolean;
 }
 
@@ -12,7 +14,7 @@ const generateId = (role: string): string => {
   const prefix = {
     admin: 'ADM',
     staff: 'STF',
-    user: 'USR',
+    customer: 'CUS',
   }[role] || 'GEN';
 
   const random = Math.floor(1000 + Math.random() * 9000);
@@ -36,7 +38,7 @@ export const userService = {
 
   getCurrentUser: (): User | null => {
     const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null; 
+    return user ? JSON.parse(user) : null;
   },
 
   add: async (user: Omit<User, 'id'>): Promise<User> => {
@@ -56,17 +58,39 @@ export const userService = {
 
   login: async (email: string, password: string): Promise<User | null> => {
     try {
-      const res = await api.post('/login', { email, password });
-      const user = res.data;
-      localStorage.setItem('user', JSON.stringify(user));  
+      const res = await api.get(`/users?email=${email}`);
+      const users = res.data;
+
+      if (users.length === 0) {
+        console.error('Email không tồn tại');
+        return null;
+      }
+
+      const user = users[0];
+
+      if (user.password !== password) {
+        console.error('Sai mật khẩu');
+        return null;
+      }
+
+      localStorage.clear();
+
+      localStorage.setItem('user', JSON.stringify(user));
+
+      const orders = await orderService.getOrdersByUser(user?.id);
+
+      if (orders.length > 0) {
+        localStorage.setItem('orders', JSON.stringify(orders));
+      }
       return user;
     } catch (error) {
-      console.error('Đăng nhập thất bại', error);
+      console.error('Lỗi đăng nhập:', error);
       return null;
     }
   },
 
   logout: (): void => {
     localStorage.removeItem('user');
+    localStorage.clear();
   },
 };

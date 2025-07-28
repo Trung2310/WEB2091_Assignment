@@ -25,6 +25,7 @@ function App() {
       children: [
         {
           path: "dashboard",
+          index: true,
           element: <Dashboard />,
         },
         {

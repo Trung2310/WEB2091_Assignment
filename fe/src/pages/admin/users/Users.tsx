@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, Input, Button, Table, Modal, Form, Select, Collapse, message } from 'antd';
+import {
+  Card,
+  Input,
+  Button,
+  Table,
+  Modal,
+  Form,
+  Select,
+  message,
+  Space,
+  Popconfirm,
+} from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { userService, type User } from '../../../services/UserService';
+
 const { Option } = Select;
 
 const UserManager: React.FC = () => {
@@ -22,8 +34,12 @@ const UserManager: React.FC = () => {
   const addUserMutation = useMutation({
     mutationFn: (data: Partial<User>) => userService.add(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey) && query.queryKey[0] === 'users',
+      });
       setIsModalOpen(false);
+      message.success('Thêm người dùng thành công');
     },
   });
 
@@ -31,15 +47,23 @@ const UserManager: React.FC = () => {
     mutationFn: ({ id, data }: { id: string; data: Partial<User> }) =>
       userService.update(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey) && query.queryKey[0] === 'users',
+      });
       setIsModalOpen(false);
+      message.success('Cập nhật người dùng thành công');
     },
   });
 
   const deleteUserMutation = useMutation({
     mutationFn: (id: string) => userService.remove(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          Array.isArray(query.queryKey) && query.queryKey[0] === 'users',
+      });
+      message.success('Xóa người dùng thành công');
     },
   });
 
@@ -58,13 +82,7 @@ const UserManager: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    Modal.confirm({
-      title: 'Xác nhận xoá',
-      content: 'Bạn có chắc muốn xoá người dùng này?',
-      okText: 'Xoá',
-      cancelText: 'Huỷ',
-      onOk: () => deleteUserMutation.mutate(id),
-    });
+    deleteUserMutation.mutate(id);
   };
 
   const handleSubmit = async () => {
@@ -77,7 +95,10 @@ const UserManager: React.FC = () => {
   };
 
   const handleSearch = () => {
-    queryClient.invalidateQueries({ queryKey: ['users'] });
+    queryClient.invalidateQueries({
+      predicate: (query) =>
+        Array.isArray(query.queryKey) && query.queryKey[0] === 'users',
+    });
   };
 
   const columns = [
@@ -97,6 +118,11 @@ const UserManager: React.FC = () => {
       key: 'email',
     },
     {
+      title: 'Mật khẩu',
+      dataIndex: 'password',
+      key: 'password',
+    },
+    {
       title: 'Vai trò',
       dataIndex: 'role',
       key: 'role',
@@ -105,14 +131,17 @@ const UserManager: React.FC = () => {
       title: 'Hành động',
       key: 'actions',
       render: (_: any, record: User) => (
-        <>
-          <Button onClick={() => handleEdit(record)} style={{ marginRight: 8 }}>
-            Sửa
-          </Button>
-          <Button danger onClick={() => handleDelete(record.id)}>
-            Xoá
-          </Button>
-        </>
+        <Space>
+          <Button onClick={() => handleEdit(record)}>Sửa</Button>
+          <Popconfirm
+            title="Xác nhận xóa?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Xóa"
+            cancelText="Hủy"
+          >
+            <Button danger>Xóa</Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
@@ -120,11 +149,8 @@ const UserManager: React.FC = () => {
   return (
     <Card title="Quản lý người dùng">
       <div style={{ textAlign: 'right', marginBottom: 16 }}>
-        <Button
-          type="primary"
-          icon={<UserAddOutlined />}
-          onClick={showModal}>
-          Thêm sản phẩm
+        <Button type="primary" icon={<UserAddOutlined />} onClick={showModal}>
+          Thêm tài khoản
         </Button>
       </div>
 
@@ -153,13 +179,39 @@ const UserManager: React.FC = () => {
         cancelText="Huỷ"
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="fullName" label="Tên" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
+          <Form.Item
+            name="fullName"
+            label="Tên"
+            rules={[{ required: true, message: 'Vui lòng nhập tên' }]}
+          >
             <Input />
           </Form.Item>
-          <Form.Item name="email" label="Email" rules={[{ required: true, message: 'Vui lòng nhập email' }]}>
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[{ required: true, message: 'Vui lòng nhập email' }]}
+          >
             <Input />
           </Form.Item>
-          <Form.Item name="role" label="Vai trò" rules={[{ required: true, message: 'Chọn vai trò' }]}>
+          <Form.Item
+            name="password"
+            label="Mật khẩu"
+            rules={[
+              {
+                required: !isEdit,
+                message: 'Vui lòng nhập mật khẩu',
+              },
+            ]}
+          >
+            <Input.Password
+              placeholder={isEdit ? 'Để trống nếu không muốn đổi' : 'Nhập mật khẩu'}
+            />
+          </Form.Item>
+          <Form.Item
+            name="role"
+            label="Vai trò"
+            rules={[{ required: true, message: 'Chọn vai trò' }]}
+          >
             <Select>
               <Option value="admin">Admin</Option>
               <Option value="customer">Customer</Option>
