@@ -1,4 +1,6 @@
+import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AdminLayout from "./layouts/admin/AdminLayout";
 import ClientLayout from "./layouts/client/ClientLayout";
 import Dashboard from "./pages/admin/dashboard/Dashboard";
 import Users from "./pages/admin/users/Users";
@@ -14,7 +16,6 @@ import ProductDetail from "./pages/client/productdetail/ProducDetail";
 import Cart from "./pages/client/cart/Cart";
 import Order from "./pages/client/order/Order";
 import Categories from "./pages/client/categories/Categories";
-import AdminLayout from "./layouts/admin/AdminLayout";
 
 function App() {
   const router = createBrowserRouter([

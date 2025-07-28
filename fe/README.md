@@ -67,5 +67,3 @@ export default tseslint.config([
   },
 ])
 ```
-//pnpm add react-router-dom axios antd//
-//git config --global core.autocrlf input//
