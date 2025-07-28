@@ -1,61 +1,97 @@
 import React, { useState } from 'react';
+import { Form, Input, Button, Typography, Alert, Card } from 'antd';
+import { useMutation } from '@tanstack/react-query';
 import { userService } from '../../../services/UserService';
+import { useNavigate } from 'react-router-dom';
+
+const { Title } = Typography;
 
 const Register: React.FC = () => {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState<string>('');  
-  const [success, setSuccess] = useState<string>('');  
+  const [form] = Form.useForm();
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const nav = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await userService.add({ fullName, email, role: 'user', isActive: true });  // Gọi phương thức add từ userService để đăng ký
+  const registerMutation = useMutation({
+    mutationFn: (data: { fullName: string; email: string; password: string }) =>
+      userService.add({ ...data, role: 'customer', isActive: true }),
+    onSuccess: () => {
       setSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
-      setError('');  // Reset lỗi khi đăng ký thành công
-    } catch {
+      setError('');
+      form.resetFields();
+    },
+    onError: () => {
       setError('Đăng ký thất bại. Vui lòng thử lại.');
       setSuccess('');
-    }
+    },
+  });
+
+  const onFinish = (values: { fullName: string; email: string; password: string }) => {
+    setError('');
+    setSuccess('');
+    registerMutation.mutate(values);
   };
 
   return (
-    <div className="form-container">
-      <h2>Đăng ký tài khoản</h2>
-      {error && <div className="error-message">{error}</div>} {/* Hiển thị thông báo lỗi nếu có */}
-      {success && <div className="success-message">{success}</div>} {/* Hiển thị thông báo thành công nếu có */}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Tên đầy đủ:</label>
-          <input
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Mật khẩu:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {/* Thêm class riêng cho button */}
-        <button className="register-button" type="submit">Đăng ký</button>
-      </form>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: "2%" }}>
+      <Card style={{ width: 450, padding: 24 }}>
+        <Title level={3} style={{ textAlign: 'center' }}>Đăng ký tài khoản</Title>
+
+        {error && <Alert type="error" message={error} style={{ marginBottom: 16 }} />}
+        {success && <Alert type="success" message={success} style={{ marginBottom: 16 }} />}
+
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="Họ và tên"
+            name="fullName"
+            rules={[{ required: true, message: 'Vui lòng nhập họ và tên' }]}
+          >
+            <Input placeholder="Nhập họ và tên" />
+          </Form.Item>
+
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: 'Vui lòng nhập email' },
+              { type: 'email', message: 'Email không hợp lệ' },
+            ]}
+          >
+            <Input placeholder="Nhập email" />
+          </Form.Item>
+
+          <Form.Item
+            label="Mật khẩu"
+            name="password"
+            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
+          >
+            <Input.Password placeholder="Nhập mật khẩu" />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              loading={registerMutation.isPending}
+            >
+              Đăng ký
+            </Button>
+          </Form.Item>
+        </Form>
+        <div style={{ textAlign: 'center', marginTop: 16 }}>
+  <span>Đã có tài khoản? </span>
+  <Button type="link" onClick={() => nav('/login')}>
+    Đăng nhập
+  </Button>
+</div>
+
+      </Card>
     </div>
   );
 };

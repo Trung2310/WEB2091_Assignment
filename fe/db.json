@@ -3,6 +3,7 @@
     {
       "fullName": "Nguyễn Văn A1",
       "email": "a@example.com",
+      "password": "123456",
       "role": "admin",
       "isActive": true,
       "id": "1"
@@ -10,8 +11,50 @@
     {
       "fullName": "Trần Thị B",
       "email": "b@example.com",
+      "password": "123456",
       "role": "staff",
+      "isActive": true,
       "id": "2"
+    },
+    {
+      "fullName": "Trần Thị B",
+      "email": "c@example.com",
+      "password": "123456",
+      "role": "customer",
+      "isActive": true,
+      "id": "3"
+    },
+    {
+      "fullName": "admin@gmail.com",
+      "email": "zrfixh@gmail.com",
+      "password": "password",
+      "role": "customer",
+      "isActive": true,
+      "id": "CUS6853"
+    },
+    {
+      "fullName": "admin@gmail.com",
+      "email": "zrfixh@gmail.com",
+      "password": "password",
+      "role": "customer",
+      "isActive": true,
+      "id": "CUS2847"
+    },
+    {
+      "fullName": "ee",
+      "email": "zrfixh@gmail.com",
+      "password": "123456",
+      "role": "customer",
+      "isActive": true,
+      "id": "CUS7679"
+    },
+    {
+      "fullName": "KaezahaT24",
+      "email": "admin@gmail.com",
+      "password": "password",
+      "role": "customer",
+      "isActive": true,
+      "id": "CUS7715"
     }
   ],
   "products": [
@@ -253,10 +296,18 @@
       "cancelledAt": null
     },
     {
-      "id": "ORD5541",
+      "id": "ORD6600",
       "userId": "USR123",
       "userName": "Nguyễn Văn A",
       "items": [
+        {
+          "productId": "PROD1001",
+          "name": "Nike Air Zoom Pegasus 37",
+          "size": 42,
+          "color": "Black/White",
+          "quantity": 1,
+          "price": 2900000
+        },
         {
           "productId": "PROD1001",
           "name": "Nike Air Zoom Pegasus 37",
@@ -272,23 +323,17 @@
           "color": "Black/White",
           "quantity": 1,
           "price": 3200000
-        },
-        {
-          "productId": "PROD1002",
-          "name": "Adidas Ultraboost 22",
-          "size": 42,
-          "color": "Black/White",
-          "quantity": 1,
-          "price": 3200000
-        },
-        {
-          "productId": "PROD1002",
-          "name": "Adidas Ultraboost 22",
-          "size": 42,
-          "color": "Black/White",
-          "quantity": 1,
-          "price": 3200000
-        },
+        }
+      ],
+      "total": 9000000,
+      "status": "Pending",
+      "createdAt": "2025-07-27T10:17:10.645Z"
+    },
+    {
+      "id": "ORD6396",
+      "userId": "3",
+      "userName": "Trần Thị B",
+      "items": [
         {
           "productId": "PROD1002",
           "name": "Adidas Ultraboost 22",
@@ -298,14 +343,16 @@
           "price": 3200000
         }
       ],
-      "total": 15700000,
-      "status": "Pending",
-      "createdAt": "2025-07-25T07:48:53.809Z"
+      "total": 3200000,
+      "status": "Completed",
+      "createdAt": "2025-07-27T10:23:31.189Z",
+      "completedAt": "2025-07-27T10:53:28.808Z",
+      "cancelledAt": null
     },
     {
-      "id": "ORD9387",
-      "userId": "USR123",
-      "userName": "Nguyễn Văn A",
+      "id": "ORD6492",
+      "userId": "3",
+      "userName": "Trần Thị B",
       "items": [
         {
           "productId": "PROD1002",
@@ -318,43 +365,7 @@
       ],
       "total": 3200000,
       "status": "Pending",
-      "createdAt": "2025-07-25T07:59:45.609Z"
-    },
-    {
-      "id": "ORD6014",
-      "userId": "USR123",
-      "userName": "Nguyễn Văn A",
-      "items": [
-        {
-          "productId": "PROD1001",
-          "name": "Nike Air Zoom Pegasus 37",
-          "size": 42,
-          "color": "Black/White",
-          "quantity": 1,
-          "price": 2900000
-        }
-      ],
-      "total": 2900000,
-      "status": "Pending",
-      "createdAt": "2025-07-25T08:07:39.231Z"
-    },
-    {
-      "id": "ORD9683",
-      "userId": "USR123",
-      "userName": "Nguyễn Văn A",
-      "items": [
-        {
-          "productId": "PROD1002",
-          "name": "Adidas Ultraboost 22",
-          "size": 42,
-          "color": "Black/White",
-          "quantity": 1,
-          "price": 3200000
-        }
-      ],
-      "total": 3200000,
-      "status": "Pending",
-      "createdAt": "2025-07-25T08:10:58.174Z"
+      "createdAt": "2025-07-27T10:26:09.565Z"
     }
   ]
 }
