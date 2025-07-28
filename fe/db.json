@@ -1,10 +1,371 @@
 {
   "users": [
-    { "id": 1, "name": "Nguyễn Văn A", "email": "a@example.com" },
-    { "id": 2, "name": "Trần Thị B", "email": "b@example.com" }
+    {
+      "fullName": "Nguyễn Văn A1",
+      "email": "a@example.com",
+      "password": "123456",
+      "role": "admin",
+      "isActive": true,
+      "id": "1"
+    },
+    {
+      "fullName": "Trần Thị B",
+      "email": "b@example.com",
+      "password": "123456",
+      "role": "staff",
+      "isActive": true,
+      "id": "2"
+    },
+    {
+      "fullName": "Trần Thị B",
+      "email": "c@example.com",
+      "password": "123456",
+      "role": "customer",
+      "isActive": true,
+      "id": "3"
+    },
+    {
+      "fullName": "admin@gmail.com",
+      "email": "zrfixh@gmail.com",
+      "password": "password",
+      "role": "customer",
+      "isActive": true,
+      "id": "CUS6853"
+    },
+    {
+      "fullName": "admin@gmail.com",
+      "email": "zrfixh@gmail.com",
+      "password": "password",
+      "role": "customer",
+      "isActive": true,
+      "id": "CUS2847"
+    },
+    {
+      "fullName": "ee",
+      "email": "zrfixh@gmail.com",
+      "password": "123456",
+      "role": "customer",
+      "isActive": true,
+      "id": "CUS7679"
+    },
+    {
+      "fullName": "KaezahaT24",
+      "email": "admin@gmail.com",
+      "password": "password",
+      "role": "customer",
+      "isActive": true,
+      "id": "CUS7715"
+    }
   ],
-  "posts": [
-    { "id": 1, "title": "Bài viết 1", "content": "Nội dung bài viết 1", "userId": 1 },
-    { "id": 2, "title": "Bài viết 2", "content": "Nội dung bài viết 2", "userId": 2 }
+  "products": [
+    {
+      "name": "Nike Air Zoom Pegasus 37",
+      "price": 2900000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "image": "https://bizweb.dktcdn.net/thumb/1024x1024/100/347/092/products/air-zoom-pegasus-37-flyease-ck8474-003-01.jpg",
+      "stock": 13,
+      "description": "Nike Air Zoom Pegasus 37 là một đôi giày thể thao được thiết kế đặc biệt để mang lại sự thoải mái và hỗ trợ tối ưu trong mỗi bước chạy. Được trang bị công nghệ Zoom Air tiên tiến, đôi giày này không chỉ mang lại cảm giác nhẹ nhàng, linh hoạt mà còn đảm bảo độ đàn hồi tuyệt vời, giúp bạn hoàn thiện mọi bài tập chạy một cách dễ dàng. Với thiết kế bắt mắt, phối màu đen và trắng thanh lịch, đôi giày này cũng phù hợp với những buổi đi dạo hoặc dạo phố. Chắc chắn là một lựa chọn lý tưởng cho những ai đam mê thể thao và yêu thích sự năng động.",
+      "isAvailable": true,
+      "id": "PROD1001"
+    },
+    {
+      "id": "PROD1002",
+      "name": "Adidas Ultraboost 22",
+      "price": 3200000,
+      "color": "Core Black",
+      "brandId": 2,
+      "categoryId": 1,
+      "size": [
+        39,
+        40,
+        41,
+        42,
+        43
+      ],
+      "image": "https://cdn-images.farfetch-contents.com/19/43/49/22/19434922_43282895_1000.jpg",
+      "stock": 12,
+      "description": "Adidas Ultraboost 22 là mẫu giày chạy bộ đỉnh cao của Adidas, mang lại cảm giác cực kỳ êm ái và hỗ trợ tối đa trong mỗi bước đi. Được trang bị công nghệ đệm Boost độc quyền, đôi giày này giúp tăng cường sự linh hoạt và độ đàn hồi, đồng thời cung cấp khả năng hấp thụ lực cực kỳ hiệu quả. Với thiết kế màu đen sang trọng, đôi giày này không chỉ lý tưởng cho việc chạy bộ mà còn hoàn hảo cho các hoạt động thể thao khác, đảm bảo cả sự thoải mái và thời trang.",
+      "isAvailable": true
+    },
+    {
+      "name": "Nike Air Max 270",
+      "price": 4000000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        38,
+        39,
+        40
+      ],
+      "image": "https://static.nike.com/a/images/t_PDP_936_v1/f_auto,q_auto:eco/cb1951e7-0600-4f7a-9b26-12be8cd2bd01/W+AIR+MAX+270.png",
+      "stock": 14,
+      "description": "Nike Air Max 270 là đôi giày thể thao lý tưởng cho những người yêu thích sự thoải mái và tốc độ. Được trang bị công nghệ Zoom Air giúp giảm chấn và mang lại cảm giác đệm êm ái dưới bàn chân, giúp bạn chinh phục mọi cung đường chạy mà không gặp phải sự mệt mỏi. Thiết kế nhẹ nhàng và thoáng khí giúp cho đôi giày luôn mát mẻ, dễ chịu ngay cả khi phải hoạt động lâu dài. Với vẻ ngoài thể thao và thanh lịch, đây sẽ là người bạn đồng hành lý tưởng cho những buổi tập luyện cường độ cao.",
+      "isAvailable": true,
+      "id": "PROD1011"
+    },
+    {
+      "name": "Adidas NMD_R1",
+      "price": 5000000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        38
+      ],
+      "image": "https://assets.adidas.com/images/w_600,f_auto,q_auto/0fd9bc2bfc234ce0b69aaef900fddbdf_9366/Giay_NMD_R1_DJen_HQ4452_01_standard.jpg",
+      "stock": 7,
+      "description": "Với thiết kế hiện đại và công nghệ vượt trội, Adidas NMD_R1 không chỉ là một đôi giày chạy bộ, mà còn là một sản phẩm mang lại sự trải nghiệm hoàn hảo trong từng bước đi. Đệm Zoom Air tích hợp giúp giày có độ đàn hồi và giảm chấn cực tốt, làm giảm áp lực lên các khớp khi chạy. Bên cạnh đó, khả năng thoáng khí của đôi giày giúp bạn luôn cảm thấy khô thoáng và dễ chịu dù phải di chuyển trong thời gian dài.",
+      "isAvailable": true,
+      "id": "PROD1061"
+    },
+    {
+      "name": "Puma Future Rider",
+      "price": 2500000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        38,
+        39
+      ],
+      "image": "https://product.hstatic.net/1000284478/product/14_393473_1_edf32e35bf914da8ad36a38b2f8f910d.jpg",
+      "stock": 25,
+      "description": "Puma Future Rider là sự kết hợp hoàn hảo giữa phong cách thể thao và hiệu suất vượt trội. Với thiết kế đệm Zoom Air đặc biệt, đôi giày giúp bạn có những bước chạy nhẹ nhàng và dễ dàng vượt qua mọi thử thách. Đặc biệt, lớp vải lưới ở phần trên của giày giúp đôi giày có khả năng thoáng khí, giữ cho đôi chân luôn khô thoáng và thoải mái. Bất kể là chạy bộ, đi bộ hay tham gia các hoạt động thể thao, đôi giày này đều mang đến sự dễ chịu tuyệt vời.",
+      "isAvailable": true,
+      "id": "PROD1012"
+    },
+    {
+      "name": "Reebok Nano X1",
+      "price": 3500000,
+      "color": "Black/White",
+      "brandId": 1,
+      "categoryId": 1,
+      "size": [
+        41,
+        42
+      ],
+      "image": "https://bizweb.dktcdn.net/100/347/092/products/nano-x1-men-s-training-shoes-white-gz5393-02-standard.jpg?v=1646676114020",
+      "stock": 30,
+      "description": "Reebok Nano X1 là sự lựa chọn lý tưởng cho những ai yêu thích chạy bộ, với một thiết kế mang lại sự kết hợp hoàn hảo giữa sự thoải mái và phong cách. Công nghệ Zoom Air giúp đôi giày có khả năng giảm chấn và tăng độ linh hoạt, phù hợp cho những người cần sự hỗ trợ tốt khi chạy ở tốc độ cao. Phối màu đen trắng đẹp mắt giúp đôi giày phù hợp với nhiều loại trang phục thể thao và dạo phố, trở thành người bạn đồng hành lý tưởng cho các buổi tập luyện.",
+      "isAvailable": true,
+      "id": "PROD1013"
+    },
+    {
+      "name": "Nike Air Zoom Pegasus 37",
+      "price": 222,
+      "color": "Black/White",
+      "brandId": "2",
+      "categoryId": "1",
+      "image": "222",
+      "stock": 22,
+      "isAvailable": true,
+      "id": "PROD9392"
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Giày thể thao",
+      "description": "Các loại giày dùng cho thể thao và thời trang."
+    },
+    {
+      "id": "2",
+      "name": "Áo khoác",
+      "description": "Áo khoác, áo hoodie, áo ấm các loại."
+    },
+    {
+      "name": "KaezahaT24",
+      "description": "dd",
+      "id": "d808"
+    }
+  ],
+  "brands": [
+    {
+      "name": "Nike2",
+      "origin": "USA",
+      "id": "1"
+    },
+    {
+      "id": "2",
+      "name": "Adidas",
+      "origin": "Germany"
+    },
+    {
+      "id": "3ed7",
+      "name": "Phòng 101",
+      "origin": "HN"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ORD1001",
+      "userId": "1",
+      "userName": "Nam",
+      "items": [
+        {
+          "productId": "PROD1001",
+          "name": "Nike Air Max 90",
+          "size": 42,
+          "color": "Black/White",
+          "quantity": 1,
+          "price": 1500
+        },
+        {
+          "productId": "PROD1002",
+          "name": "Adidas Ultraboost",
+          "size": 41,
+          "color": "White",
+          "quantity": 2,
+          "price": 1800
+        }
+      ],
+      "total": 5100,
+      "status": "Pending",
+      "createdAt": "2025-07-17T08:00:00Z",
+      "completedAt": null,
+      "cancelledAt": null
+    },
+    {
+      "id": "ORD1002",
+      "userId": "2",
+      "userName": "Lam",
+      "items": [
+        {
+          "productId": "PROD1003",
+          "name": "Converse Chuck Taylor",
+          "size": 43,
+          "color": "Red",
+          "quantity": 1,
+          "price": 80
+        }
+      ],
+      "total": 80,
+      "status": "Cancelled",
+      "createdAt": "2025-07-15T10:30:00Z",
+      "completedAt": null,
+      "cancelledAt": "2025-07-24T13:27:43.540Z"
+    },
+    {
+      "id": "ORD1003",
+      "userId": "2",
+      "userName": "Lam",
+      "items": [
+        {
+          "productId": "PROD1003",
+          "name": "Converse Chuck Taylor",
+          "size": 43,
+          "color": "Red",
+          "quantity": 1,
+          "price": 800
+        }
+      ],
+      "total": 800,
+      "status": "Completed",
+      "createdAt": "2025-03-15T10:30:00Z",
+      "completedAt": "2025-07-24T13:27:51.646Z",
+      "cancelledAt": null
+    },
+    {
+      "id": "ORD1004",
+      "userId": "2",
+      "userName": "Lam",
+      "items": [
+        {
+          "productId": "PROD1003",
+          "name": "Converse Chuck Taylor",
+          "size": 43,
+          "color": "Red",
+          "quantity": 1,
+          "price": 80
+        }
+      ],
+      "total": 80,
+      "status": "Completed",
+      "createdAt": "2025-03-15T10:30:00Z",
+      "completedAt": "2025-03-24T13:27:51.646Z",
+      "cancelledAt": null
+    },
+    {
+      "id": "ORD6600",
+      "userId": "USR123",
+      "userName": "Nguyễn Văn A",
+      "items": [
+        {
+          "productId": "PROD1001",
+          "name": "Nike Air Zoom Pegasus 37",
+          "size": 42,
+          "color": "Black/White",
+          "quantity": 1,
+          "price": 2900000
+        },
+        {
+          "productId": "PROD1001",
+          "name": "Nike Air Zoom Pegasus 37",
+          "size": 42,
+          "color": "Black/White",
+          "quantity": 1,
+          "price": 2900000
+        },
+        {
+          "productId": "PROD1002",
+          "name": "Adidas Ultraboost 22",
+          "size": 42,
+          "color": "Black/White",
+          "quantity": 1,
+          "price": 3200000
+        }
+      ],
+      "total": 9000000,
+      "status": "Pending",
+      "createdAt": "2025-07-27T10:17:10.645Z"
+    },
+    {
+      "id": "ORD6396",
+      "userId": "3",
+      "userName": "Trần Thị B",
+      "items": [
+        {
+          "productId": "PROD1002",
+          "name": "Adidas Ultraboost 22",
+          "size": 42,
+          "color": "Black/White",
+          "quantity": 1,
+          "price": 3200000
+        }
+      ],
+      "total": 3200000,
+      "status": "Completed",
+      "createdAt": "2025-07-27T10:23:31.189Z",
+      "completedAt": "2025-07-27T10:53:28.808Z",
+      "cancelledAt": null
+    },
+    {
+      "id": "ORD6492",
+      "userId": "3",
+      "userName": "Trần Thị B",
+      "items": [
+        {
+          "productId": "PROD1002",
+          "name": "Adidas Ultraboost 22",
+          "size": 42,
+          "color": "Black/White",
+          "quantity": 1,
+          "price": 3200000
+        }
+      ],
+      "total": 3200000,
+      "status": "Pending",
+      "createdAt": "2025-07-27T10:26:09.565Z"
+    }
   ]
 }

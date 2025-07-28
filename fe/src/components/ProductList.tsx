@@ -23,7 +23,7 @@ const ProductList: React.FC = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:3001/products');
+      const res = await axios.get('http://localhost:3002/products');
       setProducts(res.data);
     } catch (error) {
       message.error('Có lỗi xảy ra khi tải sản phẩm');

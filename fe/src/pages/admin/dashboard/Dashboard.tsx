@@ -1,84 +1,176 @@
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Card, Col, Row, Spin, Statistic } from "antd";
+import { Card, Col, Row, Statistic, Select } from "antd";
+import { Bar, Chart, Line, Pie } from "react-chartjs-2";
 import {
-  UserOutlined,
-  ShoppingCartOutlined,
-  DollarOutlined,
-} from "@ant-design/icons";
-import axios from "axios";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+} from 'chart.js';
 
-const Dashboard: React.FC = () => {
-  const [stats, setStats] = useState<any>(null); // State để lưu dữ liệu thống kê
-  const [loading, setLoading] = useState<boolean>(true); // Trạng thái tải dữ liệu
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
+import dayjs from "dayjs";
+import { orderService, type Order } from "../../../services/OrderService";
+import { useQuery } from "@tanstack/react-query";
 
-  // Hàm lấy dữ liệu thống kê
+// ChartJS.register(ArcElement, Tooltip, Legend);
+const { Option } = Select;
+
+const Dashboard = () => {
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [selectedYear, setSelectedYear] = useState(dayjs().year());
+  const [selectedMonth, setSelectedMonth] = useState(dayjs().month() + 1);
+
+  const { data: orders } = useQuery({
+    queryKey: ['orders'],
+    queryFn: orderService.getAll,
+  });
+
   useEffect(() => {
-    axios.get('http://localhost:3001/stats') // API giả định
-      .then((response) => {
-        setStats(response.data[0]); // Giả sử API trả về một mảng với một phần tử
-      })
-      .catch((error) => {
-        console.error("Error fetching stats:", error);
-      })
-      .finally(() => {
-        setLoading(false); // Kết thúc tải dữ liệu
-      });
-  }, []);
+    if (!orders) return;
+    const filtered = orders.filter(order => {
+      let orderDate;
+      if (order.status === "Pending") {
+        orderDate = dayjs(order.createdAt);
+      } else if (order.status === "Completed") {
+        orderDate = dayjs(order.completedAt);
+      } else if (order.status === "Cancelled") {
+        orderDate = dayjs(order.cancelledAt);
+      } else {
+        return false;
+      }
+      const matchYear = orderDate.year() === Number(selectedYear);
+      const matchMonth = selectedMonth === 0 || (orderDate.month() + 1 === Number(selectedMonth));
 
-  // Kiểm tra nếu dữ liệu đang tải
-  if (loading) {
-    return (
-      <div className="container-fluid px-4">
-        <Breadcrumb style={{ marginBottom: 16 }}>
-          <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
-          <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-        </Breadcrumb>
-        <h2 className="mb-4">Tổng quan</h2>
-        <Spin size="large" />
-      </div>
-    );
-  }
+      return matchYear && matchMonth;
+    });
+    setFilteredOrders(filtered);
+  }, [orders, selectedYear, selectedMonth]);
 
+  const total = filteredOrders.length;
+  const statusCount = {
+    Pending: filteredOrders.filter(o => o.status === "Pending").length,
+    Completed: filteredOrders.filter(o => o.status === "Completed").length,
+    Cancelled: filteredOrders.filter(o => o.status === "Cancelled").length
+  };
+
+  const orderData = {
+    labels: ["Pending", "Completed", "Cancelled"],
+    datasets: [
+      {
+        label: "Số đơn hàng",
+        data: [
+          statusCount.Pending,
+          statusCount.Completed,
+          statusCount.Cancelled
+        ],
+        backgroundColor: ["#faad14", "#52c41a", "#ff4d4f"],
+        borderWidth: 1
+      }
+    ]
+  };
+
+  const years = Array.from({ length: 6 }, (_, i) => 2020 + i);
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+  const monthlyRevenue =
+    orders && orders.length
+      ? Array.from({ length: 12 }, (_, monthIndex) => {
+        return orders
+          .filter(order => {
+            return (
+              order.status === "Completed" &&
+              order.completedAt &&
+              dayjs(order.completedAt).year() === Number(selectedYear) &&
+              dayjs(order.completedAt).month() === monthIndex
+            );
+          })
+          .reduce((sum, order) => sum + order.total, 0);
+      })
+      : Array(12).fill(0);
+      console.log(monthlyRevenue);
+      
+
+  const revenueLineData = {
+    labels: [
+      "T1", "T2", "T3", "T4", "T5", "T6",
+      "T7", "T8", "T9", "T10", "T11", "T12"
+    ],
+    datasets: [
+      {
+        label: "Doanh thu (VNĐ)",
+        data: monthlyRevenue,
+        fill: false,
+        borderColor: "#1890ff",
+        backgroundColor: "#1890ff",
+        tension: 0.3
+      }
+    ]
+  };
   return (
-    <div className="container-fluid px-4">
-      <Breadcrumb style={{ marginBottom: 16 }}>
-        <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
-        <Breadcrumb.Item>Dashboard</Breadcrumb.Item>
-      </Breadcrumb>
+    <div>
+      <h2>Thống kê đơn hàng</h2>
 
-      <h2 className="mb-4">Tổng quan</h2>
+      <Row gutter={16} style={{ marginBottom: 16 }}>
+        <Col>
+          <span>Năm: </span>
+          <Select value={selectedYear} onChange={setSelectedYear} style={{ width: 100 }}>
+            {years.map(year => (
+              <Option key={year} value={year}>{year}</Option>
+            ))}
+          </Select>
+        </Col>
+        <Col>
+          <span>Tháng: </span>
+          <Select value={selectedMonth} onChange={setSelectedMonth} style={{ width: 120 }}>
+            <Option value={0}>Tất cả</Option>
+            {months.map(month => (
+              <Option key={month} value={month}>Tháng {month}</Option>
+            ))}
+          </Select>
 
-      <Row gutter={[16, 16]}>
-        <Col xs={24} md={12} lg={8}>
-          <Card title="Người dùng" bordered={false}>
-            <div className="d-flex align-items-center">
-              <UserOutlined style={{ fontSize: 36, marginRight: 16, color: "#1890ff" }} />
-              <div>
-                <Statistic title="Đã đăng ký" value={stats.newUsers} />
-              </div>
-            </div>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col span={8}>
+          <Card>
+            <Statistic title="Tổng đơn hàng" value={total} />
           </Card>
         </Col>
-
-        <Col xs={24} md={12} lg={8}>
-          <Card title="Đơn hàng" bordered={false}>
-            <div className="d-flex align-items-center">
-              <ShoppingCartOutlined style={{ fontSize: 36, marginRight: 16, color: "#52c41a" }} />
-              <div>
-                <Statistic title="Trong tháng này" value={stats.totalOrders} />
-              </div>
-            </div>
+        <Col span={8}>
+          <Card>
+            <Statistic title="Đơn chờ" value={statusCount.Pending} valueStyle={{ color: "#faad14" }} />
           </Card>
         </Col>
+        <Col span={8}>
+          <Card>
+            <Statistic title="Hoàn tất" value={statusCount.Completed} valueStyle={{ color: "#52c41a" }} />
+          </Card>
+        </Col>
+      </Row>
 
-        <Col xs={24} md={12} lg={8}>
-          <Card title="Doanh thu" bordered={false}>
-            <div className="d-flex align-items-center">
-              <DollarOutlined style={{ fontSize: 36, marginRight: 16, color: "#faad14" }} />
-              <div>
-                <Statistic title="30 ngày gần đây" value={stats.totalRevenue} precision={2} />
-              </div>
-            </div>
+      <Row style={{ marginTop: 24 }}>
+        <Col span={12}>
+          <Card title={`Biểu đồ đơn hàng ${selectedMonth === 0 ? 'năm' : `tháng ${selectedMonth}`} ${selectedYear}`}>
+            <Pie data={orderData} key={`${selectedYear}-${selectedMonth}`}/>
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card title={`Biểu đồ doanh thu ${selectedYear}`}>
+            <Bar data={revenueLineData} />
           </Card>
         </Col>
       </Row>

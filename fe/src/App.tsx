@@ -1,50 +1,95 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AdminLayout from "./layouts/admin/AdminLayout";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ClientLayout from "./layouts/client/ClientLayout";
 import Dashboard from "./pages/admin/dashboard/Dashboard";
 import Users from "./pages/admin/users/Users";
 import Products from "./pages/admin/products/Products";
-<<<<<<< Updated upstream
-=======
 import CategoryManager from "./pages/admin/categories/Categories";
 import OrderManager from "./pages/admin/orders/Orders";
 import BrandManager from "./pages/admin/brands/Brands";
-import ClientsLayout from "./layouts/clients/ClientsLayouts";
-import Home from "./pages/clients/home/Home";
-import ClientProducts from "./pages/clients/products/Products";
-import Search from "./pages/clients/search/Search";
-import Profile from "./pages/clients/profile/Profile";
-import Cart from "./pages/clients/cart/Cart";
-import Checkout from "./pages/clients/checkout/Checkout";
-import OrderHistory from "./pages/clients/orderhistory/OrderHistory";
-import OrderDetails from "./pages/clients/orderdetails/OrderDetails";
 
->>>>>>> Stashed changes
+import Home from "./pages/client/home/Home";
+import Login from "./pages/client/login/Login";
+import Register from "./pages/client/register/Register";
+import ProductDetail from "./pages/client/productdetail/ProducDetail";
+import Cart from "./pages/client/cart/Cart";
+import Order from "./pages/client/order/Order";
+import Categories from "./pages/client/categories/Categories";
+import AdminLayout from "./layouts/admin/AdminLayout";
 
-const App = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="users" element={<Users />} />
-          <Route path="products" element={<Products />} />
-        </Route>
+function App() {
+  const router = createBrowserRouter([
+    {
+      path: "/admin",
+      element: <AdminLayout />,
+      children: [
+        {
+          path: "dashboard",
+          index: true,
+          element: <Dashboard />,
+        },
+        {
+          path: "users",
+          element: <Users />,
+        },
+        {
+          path: "products",
+          element: <Products />,
+        },
+        {
+          path: "categories",
+          element: <CategoryManager />,
+        },
+        {
+          path: "brands",
+          element: <BrandManager />,
+        },
+        {
+          path: "orders",
+          element: <OrderManager />,
+        },
+      ],
+    },
+    {
+      path: "/",
+      element: <ClientLayout />, 
+      children: [
+        {
+          path: "",
+          element: <Home /> 
+        },
+        {
+          path: "login",
+          element: <Login /> 
+        },
+        { 
+          path: "register",
+          element: <Register /> 
+        },
+        { 
+          path: "product/:id",
+          element: <ProductDetail /> 
+        },
+        { 
+          path: "cart",
+          element: <Cart /> 
+        },
+        { 
+          path: "order",
+          element: <Order /> 
+        },
+        {
+          path: "categories",
+          element: <Categories />  
+        }
+      ],
+    },
+    {
+      path: "*",
+      element: <h1>404 - Not Found</h1>,
+    },
+  ]);
 
-        <Route path="/client" element={<ClientsLayout />}>
-          <Route path="home" element={<Home />} />
-          <Route path="products" element={<ClientProducts />} />
-          <Route path="search" element={<Search />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="checkout" element={<Checkout />} />
-          <Route path="order-history" element={<OrderHistory />} />
-          <Route path="order-details/:orderId" element={<OrderDetails />} />
-        </Route>
-
-        <Route path="*" element={<h1>404 - Not Found</h1>} />
-      </Routes>
-    </BrowserRouter>
-  );
-};
+  return <RouterProvider router={router} />;
+}
 
 export default App;
