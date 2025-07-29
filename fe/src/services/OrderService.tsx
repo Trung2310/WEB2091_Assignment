@@ -18,14 +18,16 @@ export interface Order {
   total: number;
   status: 'Pending' | 'Completed' | 'Cancelled';
   createdAt: string;
-  completedAt: string;
-  cancelledAt: string;
+  completedAt: string | null;
+  cancelledAt: string | null;
+  address: string;
+  paymentMethod: string;
 }
 
 export const orderService = {
   getAll: async (): Promise<Order[]> => {
     const res = await api.get(`/orders`);
-    return res.data;
+    return res.data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
   getOrdersByUser: async (userId: string): Promise<Order[]> => {
@@ -39,30 +41,30 @@ export const orderService = {
   },
 
   createOrder: async (newOrder: any): Promise<Order> => {
-    const res = await api.post('/orders', newOrder);
+    const newOrderUp: Order = {
+      // id: Math.floor(10000 + Math.random() * 90000).toString(),
+      id: newOrder.id,
+      userId: newOrder.userId,
+      userName: newOrder.userName,
+      items: newOrder.items.map((item: any) => ({
+        productId: item.id,
+        name: item.name,
+        size: item.size,
+        color: item.color,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      address: newOrder.address,
+      paymentMethod: newOrder.paymentMethod,
+      total: newOrder.total,
+      status: 'Pending',
+      createdAt: newOrder.createdAt,
+      completedAt: null,
+      cancelledAt: null
+    };
+    const res = await api.post('/orders', newOrderUp);
     return res.data;
   },
-  // createOrder: async (cart: CartItem[], userId: string, userName: string): Promise<Order> => {
-  //   const total = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  //   const newOrder: Order = {
-  //     id: Math.floor(10000 + Math.random() * 90000).toString(),
-  //     userId,
-  //     userName,
-  //     items: cart.map(item => ({
-  //       productId: item.product.id,
-  //       name: item.product.name,
-  //       size: item.product.size ? item.product.size[0] : 0, // Chọn size đầu tiên trong mảng
-  //       color: item.product.color,
-  //       quantity: item.quantity,
-  //       price: item.product.price,
-  //     })),
-  //     total,
-  //     status: 'Pending',
-  //     createdAt: new Date().toISOString(),
-  //   };
-  //   const res = await api.post('/orders', newOrder);
-  //   return res.data;
-  // },
 
   add: async (order: Omit<Order, 'id' | 'createdAt'>): Promise<Order> => {
     const newOrder: Order = {

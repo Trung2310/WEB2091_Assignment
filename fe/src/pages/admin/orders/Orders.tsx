@@ -12,6 +12,7 @@ import {
 import { ReloadOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { orderService, type Order } from '../../../services/OrderService';
+import dayjs from 'dayjs';
 
 const statusOptions: Order['status'][] = ['Pending', 'Completed', 'Cancelled'];
 
@@ -65,7 +66,11 @@ const OrderManager: React.FC = () => {
             render: (v) =>
               `${new Intl.NumberFormat('vi-VN').format(v)} VND`,
           },
-          { title: 'Ngày tạo', dataIndex: 'createdAt' },
+          { title: 'Ngày tạo', dataIndex: 'createdAt', 
+            render: (value) => {
+              return dayjs(value).format('DD/MM/YYYY HH:mm:ss');
+            }
+           },
           {
             title: 'Trạng thái',
             dataIndex: 'status',

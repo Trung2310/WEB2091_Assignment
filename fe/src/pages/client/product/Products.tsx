@@ -43,7 +43,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
       <p style={{ color: '#fa541c', fontWeight: 600, fontSize: 16 }}>
         {product.price.toLocaleString('vi-VN')} VND
       </p>
-      <Link to={`/product/${product.id}`}>
+      <Link to={`/products/${product.id}`}>
         <button
           style={{
             marginTop: 12,
