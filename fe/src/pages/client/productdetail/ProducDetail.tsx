@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, Typography, Image, message } from "antd";
+import { Card, Button, Typography, Image, message, Select } from "antd";
+import { brandService } from "../../../services/BrandService";
 
 const { Title, Paragraph } = Typography;
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<any>(null);
+  const [brand, setBrand] = useState<any>(null);
+  const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:3002/products/${id}`)
       .then((response) => response.json())
-      .then((data) => setProduct(data))
+      .then((data) => {
+        setProduct(data);
+        setSelectedSize(data.size?.[0] || null);
+        if (data.brandId) {
+          brandService.getById(Number(data.brandId)).then(setBrand);
+        }
+      })
       .catch((error) => {
         console.error("Lỗi khi fetch dữ liệu sản phẩm:", error);
       });
@@ -22,10 +31,11 @@ const ProductDetail: React.FC = () => {
 
   const handleAddToCart = () => {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cart.push({...product,
+    cart.push({
+      ...product,
       quantity: 1,
       total: product.price,
-      size: product.size[0],
+      size: selectedSize,
       sizeList: product.size
     });
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -51,8 +61,8 @@ const ProductDetail: React.FC = () => {
         {
           productId: product.id,
           name: product.name,
-          size: 42,
-          color: "Black/White",
+          size: selectedSize || product.size?.[0],
+          color: product.color,
           quantity: 1,
           price: product.price,
         },
@@ -78,9 +88,33 @@ const ProductDetail: React.FC = () => {
         <Title level={2}>{product.name}</Title>
         <Paragraph strong>Giá: {product.price.toLocaleString()} VND</Paragraph>
         <Paragraph>Màu sắc: {product.color}</Paragraph>
+        <Paragraph>Thương hiệu: {brand?.name || "Không xác định"}</Paragraph>
+        <Paragraph>Xuất xứ: {brand?.origin || "Không có thông tin"}</Paragraph>
         <Paragraph>{product.description}</Paragraph>
 
-        <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
+        <div style={{ margin: "12px 0" }}>
+          <Paragraph strong>Chọn size:</Paragraph>
+          <Select
+            value={selectedSize}
+            onChange={(value) => setSelectedSize(value)}
+            style={{ width: 120 }}
+          >
+            {product.size?.map((s: number) => (
+              <Select.Option key={s} value={s}>
+                {s}
+              </Select.Option>
+            ))}
+          </Select>
+        </div>
+
+        <div style={{ margin: "12px 0" }}>
+          <Paragraph strong>Tình trạng:</Paragraph>
+          <Paragraph>
+            {product.isAvailable ? "Còn hàng" : "Hết hàng"}
+          </Paragraph>
+        </div>
+
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 16 }}>
           <Button type="primary" onClick={handleAddToCart}>
             Thêm vào giỏ hàng
           </Button>
