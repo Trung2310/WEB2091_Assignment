@@ -67,7 +67,7 @@ function App() {
           element: <Register /> 
         },
         { 
-          path: "product/:id",
+          path: "products/:id",
           element: <ProductDetail /> 
         },
         { 

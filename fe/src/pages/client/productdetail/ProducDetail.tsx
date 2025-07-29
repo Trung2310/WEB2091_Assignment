@@ -26,7 +26,8 @@ const ProductDetail: React.FC = () => {
       quantity: 1,
       total: product.price,
       size: product.size[0],
-      sizeList: product.size
+      sizeList: product.size,
+      idRow: Date.now(),
     });
     localStorage.setItem("cart", JSON.stringify(cart));
     message.success("Đã thêm vào giỏ hàng!");
