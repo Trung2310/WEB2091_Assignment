@@ -1,21 +1,7 @@
 import api from '../configs/api';
 import qs from 'qs';
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  color: string;
-  brandId?: number;
-  categoryId?: number;
-  size?: number[];
-  image: string;
-  stock?: number;
-  description?: string;
-  isAvailable?: boolean;
-  brand?: { id: number; name: string };
-  category?: { id: number; name: string };
-}
+import type { Product } from '../interfaces/products';
+import type { CrudService } from '../interfaces/crud';
 
 export const productService = {
   getAll: async (search: string): Promise<Product[]> => {
@@ -24,13 +10,19 @@ export const productService = {
         q: search,
         _expand: ['brand', 'category'],
       },
-      paramsSerializer: params => qs.stringify(params, { arrayFomat: 'repeat' })
+      paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
     });
+
     return res.data;
   },
 
   getById: async (id: string): Promise<Product> => {
-    const res = await api.get(`/products/${id}`);
+    const res = await api.get(`/products/${id}`, {
+      params: {
+        _expand: ['brand', 'category'],
+      },
+      paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+    });
     return res.data;
   },
 

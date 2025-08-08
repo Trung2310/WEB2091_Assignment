@@ -1,45 +1,38 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Typography, Alert, Card } from 'antd';
-import { useMutation } from '@tanstack/react-query';
-import { userService } from '../../../services/UserService';
 import { useNavigate } from 'react-router-dom';
+import { useAuthen } from '../../../hooks/useAuthen';
 
 const { Title } = Typography;
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const nav = useNavigate();
-
-  const registerMutation = useMutation({
-    mutationFn: (data: { fullName: string; email: string; password: string }) =>
-      userService.add({ ...data, role: 'customer', isActive: true }),
-    onSuccess: () => {
-      setSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
-      setError('');
-      form.resetFields();
-    },
-    onError: () => {
-      setError('Đăng ký thất bại. Vui lòng thử lại.');
-      setSuccess('');
-    },
-  });
+  const authMutation = useAuthen('register');
 
   const onFinish = (values: { fullName: string; email: string; password: string }) => {
-    setError('');
-    setSuccess('');
-    registerMutation.mutate(values);
+    authMutation.mutate(values);
+    // form.resetFields();
   };
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: "2%" }}>
       <Card style={{ width: 450, padding: 24 }}>
         <Title level={3} style={{ textAlign: 'center' }}>Đăng ký tài khoản</Title>
-
-        {error && <Alert type="error" message={error} style={{ marginBottom: 16 }} />}
-        {success && <Alert type="success" message={success} style={{ marginBottom: 16 }} />}
-
+        {authMutation.isError && (
+          <Alert
+            type="error"
+            message={authMutation.error instanceof Error ? authMutation.error.message : "Có lỗi xảy ra"}
+            style={{ marginBottom: 16 }}
+          />
+        )}
+        {authMutation.isSuccess && (
+          <Alert
+            type="success"
+            message="Thao tác thành công"
+            style={{ marginBottom: 16 }}
+          />
+        )}
         <Form
           form={form}
           layout="vertical"
@@ -72,24 +65,42 @@ const Register: React.FC = () => {
           >
             <Input.Password placeholder="Nhập mật khẩu" />
           </Form.Item>
-
+          <Form.Item
+            name="confirmPassword"
+            dependencies={["password"]}
+            rules={[
+              { required: true, message: "Vui lòng xác nhận mật khẩu!" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Mật khẩu xác nhận không khớp!")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Xác nhận mật khẩu" />
+          </Form.Item>
           <Form.Item>
             <Button
               type="primary"
               htmlType="submit"
               block
-              loading={registerMutation.isPending}
+              loading={authMutation.isPending}
             >
               Đăng ký
             </Button>
           </Form.Item>
         </Form>
         <div style={{ textAlign: 'center', marginTop: 16 }}>
-  <span>Đã có tài khoản? </span>
-  <Button type="link" onClick={() => nav('/login')}>
-    Đăng nhập
-  </Button>
-</div>
+          <span>Đã có tài khoản? </span>
+          <Button type="link" onClick={() => nav('/login')}>
+            Đăng nhập
+          </Button>
+        </div>
 
       </Card>
     </div>

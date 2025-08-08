@@ -16,12 +16,18 @@ import ProductDetail from "./pages/client/productdetail/ProducDetail";
 import Cart from "./pages/client/cart/Cart";
 import Order from "./pages/client/order/Order";
 import Categories from "./pages/client/categories/Categories";
+import ReviewManager from "./pages/admin/reviews/Reviews";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/admin",
-      element: <AdminLayout />,
+      element: (
+        <PrivateRoute allowedRoles={["admin", "staff"]}>
+          <AdminLayout />
+        </PrivateRoute>
+      ),
       children: [
         {
           path: "dashboard",
@@ -48,40 +54,56 @@ function App() {
           path: "orders",
           element: <OrderManager />,
         },
+        {
+          path: "reviews",
+          element: <ReviewManager />,
+        },
       ],
     },
     {
       path: "/",
-      element: <ClientLayout />, 
+      element: <ClientLayout />,
       children: [
         {
           path: "",
-          element: <Home /> 
+          element: <Home />
+        },
+        {
+          path: "about",
+          element: <Home />
+        },
+        {
+          path: "contact",
+          element: <Home />
         },
         {
           path: "login",
-          element: <Login /> 
-        },
-        { 
-          path: "register",
-          element: <Register /> 
-        },
-        { 
-          path: "products/:id",
-          element: <ProductDetail /> 
-        },
-        { 
-          path: "cart",
-          element: <Cart /> 
-        },
-        { 
-          path: "order",
-          element: <Order /> 
+          element: <Login />
         },
         {
-          path: "categories",
-          element: <Categories />  
-        }
+          path: "register",
+          element: <Register />
+        },
+        {
+          path: "products/:id",
+          element: <ProductDetail />
+        },
+        {
+          path: "cart",
+          element: (
+            <PrivateRoute allowedRoles={["customer"]}>
+              <Cart />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "order",
+          element: (
+            <PrivateRoute allowedRoles={["customer"]}>
+              <Order />
+            </PrivateRoute>
+          ),
+        },
       ],
     },
     {

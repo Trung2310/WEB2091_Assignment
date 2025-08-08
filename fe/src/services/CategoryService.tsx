@@ -1,12 +1,8 @@
 import api from '../configs/api';
+import type { Category } from '../interfaces/categories';
+import type { CrudService } from '../interfaces/crud';
 
-export interface Category {
-  id: number;
-  name: string;
-  description?: string;
-}
-
-export const categoryService = {
+export const categoryService: CrudService<Category, Omit<Category, 'id'>, number> = {
   getAll: async (): Promise<Category[]> => {
     const res = await api.get(`/categories`);
     return res.data;

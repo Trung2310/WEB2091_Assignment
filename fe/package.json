@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "json-server": "json-server --watch db.json --port 3002",
-    "start": "json-server --watch db.json --port 3002"
+    "start": "json-server db.json -m ./node_modules/json-server-auth --port 3002"
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
@@ -20,17 +20,17 @@
     "bootstrap": "^5.3.7",
     "chart.js": "^4.5.0",
     "dayjs": "^1.11.13",
-    "json-server": "1.0.0-beta.3",
     "json-server-auth": "^2.1.0",
     "qs": "^6.14.0",
-    "react": "^19.1.0",
+    "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
-    "react-dom": "^19.1.0",
-
-    "react-router-dom": "^7.7.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.7.1",
+    "use-debounce": "^10.0.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
+    "@types/qs": "^6.14.0",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
@@ -38,6 +38,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.2.0",
+    "json-server": "0.17.4",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.34.1",
     "vite": "^7.0.0"

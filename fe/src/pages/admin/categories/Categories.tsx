@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Table, Button, Modal, Form, Input, Space, Popconfirm, Typography, message, Card } from 'antd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { categoryService, type Category } from '../../../services/CategoryService';
+import useCreate from '../../../hooks/useCreate';
+import useUpdate from '../../../hooks/useUpdate';
+import { useList } from '../../../hooks/useList';
+import useRemove from '../../../hooks/useRemove';
 
 const CategoryManager: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,39 +13,11 @@ const CategoryManager: React.FC = () => {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [form] = Form.useForm();
 
-  const queryClient = useQueryClient();
+   const { data: categories, isLoading, error, refetch, } = useList(`categories`);
 
-  const { data: categories, isLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: categoryService.getAll,
-  });
-
-  const addMutation = useMutation({
-    mutationFn: categoryService.add,
-    onSuccess: () => {
-      message.success('Đã thêm danh mục');
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      setIsModalOpen(false);
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Category> }) =>
-      categoryService.update(id, data),
-    onSuccess: () => {
-      message.success('Đã cập nhật danh mục');
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      setIsModalOpen(false);
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => categoryService.remove(id),
-    onSuccess: () => {
-      message.success('Đã xóa danh mục');
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-    },
-  });
+  const addMutation = useCreate('categories');
+  const updateMutation = useUpdate('categories');
+  const removeMutation = useRemove('categories');
 
   const handleAdd = () => {
     form.resetFields();
@@ -57,15 +33,17 @@ const CategoryManager: React.FC = () => {
   };
 
   const handleDelete = (id: number) => {
-    deleteMutation.mutate(id);
+    removeMutation.mutate(id);
   };
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (isEdit && editingCategory) {
       updateMutation.mutate({ id: editingCategory.id, data: values });
+      setIsModalOpen(false);
     } else {
       addMutation.mutate(values);
+      setIsModalOpen(false);
     }
   };
 
@@ -89,7 +67,7 @@ const CategoryManager: React.FC = () => {
               <Space>
                 <Button onClick={() => handleEdit(record)}>Sửa</Button>
                 <Popconfirm title="Xác nhận xóa?" onConfirm={() => handleDelete(record.id)}>
-                  <Button danger loading={deleteMutation.isPending}>Xóa</Button>
+                  <Button danger loading={removeMutation.isPending}>Xóa</Button>
                 </Popconfirm>
               </Space>
             )

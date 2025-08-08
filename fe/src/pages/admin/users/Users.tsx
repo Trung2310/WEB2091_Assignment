@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Card,
   Input,
@@ -8,12 +8,14 @@ import {
   Modal,
   Form,
   Select,
-  message,
   Space,
   Popconfirm,
 } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
-import { userService, type User } from '../../../services/UserService';
+import { useList } from '../../../hooks/useList';
+import useCreate from '../../../hooks/useCreate';
+import useUpdate from '../../../hooks/useUpdate';
+import useRemove from '../../../hooks/useRemove';
 
 const { Option } = Select;
 
@@ -23,49 +25,15 @@ const UserManager: React.FC = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [editingUser, setEditingUser] = useState<any | null>(null);
   const [searchText, setSearchText] = useState('');
 
-  const { data: users = [] } = useQuery<User[]>({
-    queryKey: ['users', searchText],
-    queryFn: () => userService.getAll(searchText),
-  });
+  const { data: users } = useList(`users`, searchText);
 
-  const addUserMutation = useMutation({
-    mutationFn: (data: Partial<User>) => userService.add(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        predicate: (query) =>
-          Array.isArray(query.queryKey) && query.queryKey[0] === 'users',
-      });
-      setIsModalOpen(false);
-      message.success('Thêm người dùng thành công');
-    },
-  });
-
-  const updateUserMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<User> }) =>
-      userService.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        predicate: (query) =>
-          Array.isArray(query.queryKey) && query.queryKey[0] === 'users',
-      });
-      setIsModalOpen(false);
-      message.success('Cập nhật người dùng thành công');
-    },
-  });
-
-  const deleteUserMutation = useMutation({
-    mutationFn: (id: string) => userService.remove(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        predicate: (query) =>
-          Array.isArray(query.queryKey) && query.queryKey[0] === 'users',
-      });
-      message.success('Xóa người dùng thành công');
-    },
-  });
+  const addMutation = useCreate('users');
+  const updateMutation = useUpdate('users');
+  const removeMutation = useRemove('users');
+  const roleUser = [{'role': 'admin'}, {'role': 'staff'}, {'role': 'customer'}];
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -74,7 +42,7 @@ const UserManager: React.FC = () => {
     setEditingUser(null);
   };
 
-  const handleEdit = (user: User) => {
+  const handleEdit = (user: any) => {
     setIsModalOpen(true);
     setIsEdit(true);
     form.setFieldsValue(user);
@@ -82,15 +50,17 @@ const UserManager: React.FC = () => {
   };
 
   const handleDelete = (id: string) => {
-    deleteUserMutation.mutate(id);
+    removeMutation.mutate(id);
   };
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (isEdit && editingUser) {
-      updateUserMutation.mutate({ id: editingUser.id, data: values });
+      updateMutation.mutate({ id: editingUser.id, data: values });
+      setIsModalOpen(false);
     } else {
-      addUserMutation.mutate(values);
+      addMutation.mutate(values);
+      setIsModalOpen(false);
     }
   };
 
@@ -126,11 +96,35 @@ const UserManager: React.FC = () => {
       title: 'Vai trò',
       dataIndex: 'role',
       key: 'role',
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }: any) => (
+        <div style={{ padding: 8 }}>
+          <Select
+            value={selectedKeys[0]}
+            onChange={(value) => {
+              setSelectedKeys(value ? [value] : []);
+              confirm();
+            }}
+            style={{ width: 200 }}
+            defaultValue={''}
+          >
+            <Option value="">Tất cả</Option>
+            {roleUser.map((item: any) => (
+              <Option key={String(item.role)} value={item.role}>
+                {item.role}
+              </Option>
+            ))}
+          </Select>
+        </div>
+      ),
+      onFilter: (value: any, record: any) => {
+        return record?.role === value;
+      },
+      render: (text: any) => text || '',
     },
     {
       title: 'Hành động',
       key: 'actions',
-      render: (_: any, record: User) => (
+      render: (_: any, record: any) => (
         <Space>
           <Button onClick={() => handleEdit(record)}>Sửa</Button>
           <Popconfirm

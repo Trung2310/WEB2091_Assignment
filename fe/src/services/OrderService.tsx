@@ -1,32 +1,11 @@
 import api from '../configs/api';
-import type { CartItem } from './CartService';
-
-export interface OrderItem {
-  productId: string;
-  name: string;
-  size: number;
-  color: string;
-  quantity: number;
-  price: number;
-}
-
-export interface Order {
-  id: string;
-  userId: string;
-  userName: string;
-  items: OrderItem[];
-  total: number;
-  status: 'Pending' | 'Completed' | 'Cancelled';
-  createdAt: string;
-  completedAt: string | null;
-  cancelledAt: string | null;
-  address: string;
-  paymentMethod: string;
-}
+import type { Order } from '../interfaces/orders';
 
 export const orderService = {
-  getAll: async (): Promise<Order[]> => {
-    const res = await api.get(`/orders`);
+  getAll: async (createdAt: string | ''): Promise<Order[]> => {
+    console.log(createdAt);
+    
+    const res = await api.get(`/orders?createAt=${createdAt}`);
     return res.data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   },
 
@@ -40,8 +19,8 @@ export const orderService = {
     return res.data;
   },
 
-  createOrder: async (newOrder: any): Promise<Order> => {
-    const newOrderUp: Order = {
+  add: async (newOrder: any): Promise<Order> => {
+    const newOrderUp: any = {
       // id: Math.floor(10000 + Math.random() * 90000).toString(),
       id: newOrder.id,
       userId: newOrder.userId,
@@ -63,16 +42,6 @@ export const orderService = {
       cancelledAt: null
     };
     const res = await api.post('/orders', newOrderUp);
-    return res.data;
-  },
-
-  add: async (order: Omit<Order, 'id' | 'createdAt'>): Promise<Order> => {
-    const newOrder: Order = {
-      ...order,
-      id: Math.floor(10000 + Math.random() * 90000),
-      createdAt: new Date().toISOString(),
-    };
-    const res = await api.post(`/orders`, newOrder);
     return res.data;
   },
 

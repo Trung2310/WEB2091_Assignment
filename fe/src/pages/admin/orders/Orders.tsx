@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   Card,
@@ -8,6 +8,7 @@ import {
   message,
   Dropdown,
   type MenuProps,
+  DatePicker,
 } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -24,10 +25,15 @@ const statusColors: Record<Order['status'], string> = {
 
 const OrderManager: React.FC = () => {
   const queryClient = useQueryClient();
+  const [filters, setFilters] = useState('');
 
   const { data: orders, isLoading } = useQuery({
-    queryKey: ['orders'],
-    queryFn: orderService.getAll,
+    queryKey: ['orders', filters],
+    queryFn: () => {
+      console.log(filters);
+      
+      return orderService.getAll(filters);
+    },
   });
 
   const updateStatusMutation = useMutation({
@@ -45,6 +51,7 @@ const OrderManager: React.FC = () => {
   const handleChangeStatus = (id: string, newStatus: Order['status']) => {
     updateStatusMutation.mutate({ id, status: newStatus });
   };
+
 
   return (
     <Card title="Quản lý đơn hàng" style={{ margin: 20 }}>
@@ -66,11 +73,42 @@ const OrderManager: React.FC = () => {
             render: (v) =>
               `${new Intl.NumberFormat('vi-VN').format(v)} VND`,
           },
-          { title: 'Ngày tạo', dataIndex: 'createdAt', 
-            render: (value) => {
-              return dayjs(value).format('DD/MM/YYYY HH:mm:ss');
-            }
-           },
+          {
+            title: "Ngày tạo",
+            dataIndex: "createdAt",
+            render: (value) => dayjs(value).format("DD/MM/YYYY HH:mm:ss"),
+            filteredValue: filters.createdAt ? [filters.createdAt] : null,
+            onFilter: (value, record) => {
+              if (!value) return true;
+              const selectedDate = dayjs(value);
+              const recordDate = dayjs(record.createdAt);
+              return recordDate.isSame(selectedDate, "day");
+            },
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+              <div style={{ padding: 8 }}>
+                <DatePicker
+                  onChange={(date) => {
+                    setSelectedKeys(date ? [date.toISOString()] : []);
+                    confirm();
+                  }}
+                  value={selectedKeys[0] ? dayjs(selectedKeys[0]) : null}
+                  style={{ marginBottom: 8, display: "block" }}
+                />
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <Button
+                    type="link"
+                    onClick={() => {
+                      clearFilters();
+                      confirm();
+                    }}
+                    size="small"
+                  >
+                    Xóa lọc
+                  </Button>
+                </div>
+              </div>
+            ),
+          },
           {
             title: 'Trạng thái',
             dataIndex: 'status',
@@ -87,6 +125,12 @@ const OrderManager: React.FC = () => {
 
               return (
                 <span>
+                  <Tag
+                    color={statusColors[status]}
+                    style={{ marginRight: 8, width: '40%' }}
+                  >
+                    {status.toUpperCase()}
+                  </Tag>
                   <Dropdown menu={{ items }} trigger={['click']}>
                     <Button
                       type="text"
@@ -95,12 +139,7 @@ const OrderManager: React.FC = () => {
                       loading={updateStatusMutation.isPending}
                     />
                   </Dropdown>
-                           <Tag
-                    color={statusColors[status]}
-                    style={{ marginRight: 8 }}
-                  >
-                    {status.toUpperCase()}
-                  </Tag>
+
                 </span>
               );
             },
@@ -114,6 +153,11 @@ const OrderManager: React.FC = () => {
                 rowKey="productId"
                 pagination={false}
                 size="small"
+                onChange={(filters) => {
+                  console.log(filters);
+                  
+                  setFilters(filters);
+                }}
                 columns={[
                   { title: 'Mã sản phẩm', dataIndex: 'productId' },
                   { title: 'Tên sản phẩm', dataIndex: 'name' },

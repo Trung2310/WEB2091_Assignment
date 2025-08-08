@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Layout, Menu, Popover, Button } from "antd";
+import React, { useState } from "react";
+import { Layout, Menu, Popover, Button, Input, Dropdown } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   ShoppingCartOutlined,
@@ -13,14 +13,15 @@ import {
 } from "@ant-design/icons";
 import logo from "../../assets/images/logo/shoes.png";
 import { useAuth } from "../../components/AuthContext";
-import { userService } from "../../services/UserService";
+import { useSearchQuery } from "../../hooks/useSearch";
 
 const { Header, Content } = Layout;
 
 const ClientLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
+  const user: any = JSON.parse(localStorage.getItem('user') || '{}')?.user;
 
   const handleLogout = async () => {
     logout();
@@ -28,6 +29,40 @@ const ClientLayout: React.FC = () => {
     localStorage.removeItem("user");
     navigate("/");
   };
+
+  const [searchTerm, setSearchTerm]: any = useState('');
+
+  const [open, setOpen] = useState(false);
+
+  const { data: results = [] } = useSearchQuery("products", searchTerm);
+
+  const items = results?.map((item: any) => ({
+    key: item.id,
+    label: <div onClick={() => navigate(`/products/${item.id}`)}>
+      <img
+        src={item.image}
+        alt={item.name}
+        style={{ width: 50, height: 50, objectFit: "cover", marginRight: 12 }}
+      />
+      <div>
+        <div style={{ fontWeight: 500 }}>{item.name}</div>
+        <div style={{ color: "#fa541c" }}>{item.price?.toLocaleString()}₫</div>
+      </div>
+    </div>,
+  })) || [];
+
+  const menu = (
+    <Menu
+      items={items.length ? items : [{ key: '0', label: '...' }]}
+      onClick={(info) => {
+        const selected = items.find((item: any) => item.key === info.key);
+        if (selected) {
+          searchTerm(selected.label);
+        }
+        setOpen(false);
+      }}
+    />
+  );
 
   const accountContent = (
     <div style={{ minWidth: 200, textAlign: 'center' }}>
@@ -71,7 +106,7 @@ const ClientLayout: React.FC = () => {
     ];
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh"}}>
       <Header
         style={{
           padding: "0 24px",
@@ -82,28 +117,38 @@ const ClientLayout: React.FC = () => {
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
           zIndex: 1000,
           position: "sticky",
-          top: 0,
+          top: '0',
           height: 64,
         }}
       >
         <div
-          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+          style={{ display: "flex", alignItems: "center", cursor: "pointer"}}
           onClick={() => navigate("/")}
         >
           <img src={logo} alt="Giày Thể Thao" style={{ height: 40 }} />
-          <span
-            style={{
-              marginLeft: 10,
-              fontWeight: 700,
-              fontSize: 22,
-              fontFamily: "'Poppins', sans-serif",
-            }}
-          >
+          <span style={{ marginLeft: 10, fontWeight: 700, fontSize: 22, textWrap: 'nowrap' }}>
             <span style={{ color: "#111" }}>S-Space</span>
             <span style={{ color: "#fa541c" }}>Shop</span>
           </span>
         </div>
-
+        <div style={{width: '40%', }}>
+          <Dropdown
+            overlay={menu}
+            open={open}
+            onOpenChange={(visible: any) => setOpen(visible)}
+            trigger={['click']}
+          >
+            <Input
+              placeholder="Tìm sản phẩm..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setOpen(true);
+              }}
+              onClick={() => setOpen(true)}
+            />
+          </Dropdown>
+        </div>
         <nav>
           <ul
             style={{
@@ -112,6 +157,7 @@ const ClientLayout: React.FC = () => {
               margin: 0,
               padding: 0,
               alignItems: "center",
+              textWrap: 'nowrap'
             }}
           >
             {navItems.map((item, index) => (
@@ -147,6 +193,8 @@ const ClientLayout: React.FC = () => {
           overflowY: "auto",
           height: "calc(100vh - 64px)",
           backgroundColor: "#f5f5f5",
+          zIndex: 900,
+          scrollbarWidth: 'none'
         }}
       >
         <header

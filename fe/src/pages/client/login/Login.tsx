@@ -4,43 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { userService } from '../../../services/UserService';
 import { useAuth } from '../../../components/AuthContext';
+import { useAuthen } from '../../../hooks/useAuthen';
 
 const { Title } = Typography;
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [error, setError] = useState<string>('');
   const { login } = useAuth();
-
-  const loginMutation = useMutation({
-    mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      const user: any = await userService.login(email, password);
-      return user;
-    },
-    onSuccess: (user) => {
-      if (user) {
-        login(user);
-        navigate("/");
-        if (user?.role === 'customer') {
-          navigate('/');
-        } else if (user.role === 'admin' || user.role === 'staff') {
-          navigate('/admin');
-        } else {
-          navigate('/login');
-        }
-      } else {
-        setError('Đăng nhập thất bại, vui lòng kiểm tra lại email hoặc mật khẩu');
-      }
-    },
-    onError: () => {
-      setError('Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại.');
-    },
-  });
+  const authMutation = useAuthen('login');
 
   const onFinish = (values: { email: string; password: string }) => {
     setError('');
-    loginMutation.mutate(values);
+    authMutation.mutate(values);
   };
 
   return (
@@ -79,7 +55,7 @@ const Login: React.FC = () => {
             <Button
               type="primary"
               htmlType="submit"
-              loading={loginMutation.isPending}
+              loading={authMutation.isPending}
               block
             >
               Đăng nhập

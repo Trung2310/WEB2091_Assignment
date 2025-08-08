@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, InputNumber, Select, Space, Popconfirm, Typography } from 'antd';
-import { productService, type Product } from '../../../services/ProductService';
+import React, { useState } from 'react';
+import { Table, Button, Modal, Form, Input, InputNumber, Select, Space, Popconfirm } from 'antd';
 import { useSearchParams } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { brandService } from '../../../services/BrandService';
 import { Option } from 'antd/es/mentions';
-import { categoryService } from '../../../services/CategoryService';
-import { CarOutlined, FileAddOutlined } from '@ant-design/icons';
+import { FileAddOutlined } from '@ant-design/icons';
 import Card from 'antd/es/card/Card';
+import { useList } from '../../../hooks/useList';
+import useCreate from '../../../hooks/useCreate';
+import useUpdate from '../../../hooks/useUpdate';
+import useRemove from '../../../hooks/useRemove';
+import type { Product } from '../../../interfaces/products';
 
 const ProductManager: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,21 +17,12 @@ const ProductManager: React.FC = () => {
   const [form] = Form.useForm();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState(searchParams.get("search") || "");
-  const queryClient = useQueryClient();
 
-  const fetchProducts = async () => {
-    const res = await productService.getAll(searchText);
-    return res;
-  };
-  const {
-    data: products,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
-  });
+  const { data: products, isLoading, error, refetch, } = useList(`products`, searchText);
+
+  const addMutation = useCreate('products');
+  const updateMutation = useUpdate('products');
+  const removeMutation = useRemove('products');
 
   const handleAdd = () => {
     form.resetFields();
@@ -43,46 +35,24 @@ const ProductManager: React.FC = () => {
     setEditingProduct(record);
     form.setFieldsValue({
       ...record,
-      brandId: record.brand?.id,
-      categoryId: record.category?.id,
+      brandId: record.brandId,
+      categoryId: record.categoryId,
     });
     setIsModalOpen(true);
   };
 
   const handleDelete = (id: string) => {
-    deleteMutation.mutate(id);
+    removeMutation.mutate(id);
   };
-
-  const addMutation = useMutation({
-    mutationFn: (newProduct: Product) => productService.add(newProduct),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      setIsModalOpen(false);
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Product }) =>
-      productService.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-      setIsModalOpen(false);
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => productService.remove(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
-  });
 
   const handleSubmit = async () => {
     const values = await form.validateFields();
     if (isEdit && editingProduct) {
       updateMutation.mutate({ id: editingProduct.id, data: values });
+      setIsModalOpen(false);
     } else {
       addMutation.mutate(values);
+      setIsModalOpen(false);
     }
   };
 
@@ -91,15 +61,9 @@ const ProductManager: React.FC = () => {
     refetch();
   };
 
-  const { data: brands = [] } = useQuery({
-    queryKey: ['brands'],
-    queryFn: () => brandService.getAll()
-  });
+  const { data: brands = [] } = useList("brands");
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => categoryService.getAll()
-  });
+  const { data: categories = [] } = useList("categories");
 
   const columns = [
     {
@@ -134,7 +98,7 @@ const ProductManager: React.FC = () => {
       title: 'Thương hiệu',
       dataIndex: ['brand', 'name'],
       key: 'brand',
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }: any) => (
         <div style={{ padding: 8 }}>
           <Select
             value={selectedKeys[0]}
@@ -163,7 +127,7 @@ const ProductManager: React.FC = () => {
       title: 'Danh mục',
       dataIndex: ['category', 'name'],
       key: 'category',
-      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm}: any) => (
         <div style={{ padding: 8 }}>
           <Select
             value={selectedKeys[0]}
@@ -175,7 +139,7 @@ const ProductManager: React.FC = () => {
             defaultValue={''}
           >
             <Option value="">Tất cả</Option>
-            {categories.map((item) => (
+            {categories.map((item: any) => (
               <Option key={String(item.id)} value={item.name}>
                 {item.name}
               </Option>
@@ -243,7 +207,7 @@ const ProductManager: React.FC = () => {
               <p><strong>Tình trạng:</strong> {record.isAvailable ? 'Còn hàng' : 'Hết hàng'}</p>
             </div>
           ),
-          rowExpandable: (record) => true,
+          rowExpandable: () => true,
         }}
       />
 
@@ -288,8 +252,8 @@ const ProductManager: React.FC = () => {
             rules={[{ required: true, message: 'Vui lòng chọn thương hiệu' }]}
           >
             <Select placeholder="Chọn thương hiệu">
-              {brands.map((brand) => (
-                <Select.Option key={brand.id} value={brand.id}>
+              {brands.map((brand: any) => (
+                <Select.Option  key={brand.id} value={brand.id}>
                   {brand.name}
                 </Select.Option>
               ))}
@@ -302,7 +266,7 @@ const ProductManager: React.FC = () => {
             rules={[{ required: true, message: 'Vui lòng chọn danh mục' }]}
           >
             <Select placeholder="Chọn danh mục">
-              {categories.map((category) => (
+              {categories.map((category: any) => (
                 <Select.Option key={category.id} value={category.id}>
                   {category.name}
                 </Select.Option>

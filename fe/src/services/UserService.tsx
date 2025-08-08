@@ -1,14 +1,6 @@
-import { useAuth } from '../components/AuthContext';
 import api from '../configs/api';
+import type { User } from '../interfaces/users';
 import { orderService } from './OrderService';
-
-export interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  role: 'admin' | 'staff' | 'customer';
-  isActive: boolean;
-}
 
 const generateId = (role: string): string => {
   const prefix = {

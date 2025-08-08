@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { categoryService } from "../../../services/CategoryService";
 import { productService } from "../../../services/ProductService";
-
+import { Button, Card, Col, Row, Typography } from "antd";
+const { Title, Text } = Typography;
 interface Product {
   id: number;
   name: string;
@@ -37,82 +38,93 @@ const Categories: React.FC = () => {
 
   return (
     <div style={{ padding: "32px" }}>
-      <h2 style={{ fontSize: "28px", fontWeight: "bold", marginBottom: "24px" }}>
+      <Title level={2} style={{ marginBottom: 24 }}>
         Danh mục sản phẩm
-      </h2>
+      </Title>
 
       {categories.map((cat) => (
         <div key={cat.id} style={{ marginBottom: "48px" }}>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "16px"
-            }}
+          <Card
+            key={cat.id}
+            title={
+              <Row justify="space-between" align="middle" style={{ width: "100%" }}>
+                <Title level={4} style={{ margin: 0 }}>
+                  {cat.name}
+                </Title>
+                <Link to={`/category/${cat.id}`}>
+                  <Button type="link">Xem thêm →</Button>
+                </Link>
+              </Row>
+            }
+            style={{ marginBottom: 32 }}
           >
-            <h3 style={{ fontSize: "22px", fontWeight: "600", margin: 0 }}>{cat.name}</h3>
-            <Link to={`/category/${cat.id}`} style={{ color: "#007bff", textDecoration: "none" }}>
-              Xem thêm →
-            </Link>
-          </div>
+            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+              {cat.products.length > 0 ? (
+                cat.products.map((product, index) => (
+                  <>
+                    <Col xs={24} sm={12} md={8} lg={7} key={product.id}>
+                      <Link to={`/products/${product.id}`} style={{ textDecoration: 'none' }}>
+                        <Card
+                          hoverable
+                          cover={
+                            <img
+                              src={product.image}
+                              alt={product.name}
+                              style={{ height: 180, objectFit: "cover" }}
+                            />
+                          }
+                        >
+                          <Title level={5}>{product.name}</Title>
+                          <Text type="success">
+                            {product.price.toLocaleString()}₫
+                          </Text>
+                        </Card>
+                      </Link>
+                    </Col>
+                    {index === 2 && (
+                      <Col xs={24} sm={12} md={8} lg={1}>
+                        <Card
+                          // style={{ border: "1px dashed #aaa", }}
+                          hoverable
+                          cover={
+                            <div style={{
+                              height: '180px',
+                              backgroundColor: '#f5f5f5',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'gray',
+                              fontSize: '18px',
+                              // border: "1px dashed #aaa"
+                            }}>
+                              ...
+                            </div>
+                          }
+                        />
+                      </Col >
+                    )}
 
-          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            {cat.products.length > 0 ? (
-              cat.products.map((product) => (
+                  </>
+                ))) : (
                 <div
-                  key={product.id}
                   style={{
-                    border: "1px solid #ccc",
+                    border: "1px dashed #aaa",
                     borderRadius: 8,
                     padding: 10,
                     width: "30%",
-                    minWidth: 200
+                    minWidth: 200,
+                    textAlign: "center",
+                    color: "#888"
                   }}
                 >
-                  <div
-                    style={{
-                      width: "auto",
-                      aspectRatio: "4 / 3",
-                      overflow: "hidden",
-                      borderRadius: 8
-                    }}
-                  >
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        display: "block"
-                      }}
-                    />
-                  </div>
-
-                  <h4 style={{ fontSize: 16, marginTop: 10 }}>{product.name}</h4>
-                  <p style={{ color: "green" }}>{product.price.toLocaleString()}₫</p>
+                  <p>Đang cập nhật...</p>
                 </div>
-              ))
-            ) : (
-              <div
-                style={{
-                  border: "1px dashed #aaa",
-                  borderRadius: 8,
-                  padding: 10,
-                  width: "30%",
-                  minWidth: 200,
-                  textAlign: "center",
-                  color: "#888"
-                }}
-              >
-                <p>Đang cập nhật...</p>
-              </div>
-            )}
-          </div>
-        </div>
+              )}
+            </div>
+          </Card>
+        </div >
       ))}
-    </div>
+    </div >
   );
 };
 

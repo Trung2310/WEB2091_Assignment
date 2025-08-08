@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, InputNumber, Select, Button, message, Divider, Typography, Modal, Input, Form, } from 'antd';
+import { Table, InputNumber, Select, Button, message, Divider, Typography, Modal, Input, Form, Card, } from 'antd';
 import { useAuth } from '../../../components/AuthContext';
 import dayjs from 'dayjs';
 import { orderService } from '../../../services/OrderService';
@@ -16,6 +16,7 @@ const Cart: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const { user } = useAuth();
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -31,9 +32,9 @@ const Cart: React.FC = () => {
     localStorage.setItem('cart', JSON.stringify(data));
   };
 
-  const handleQuantityChange = (id: number, quantity: number, price: number) => {
+  const handleQuantityChange = (idRow: any, quantity: number, price: number) => {
     const newCart = cart.map(item =>
-      item.id === id ? { ...item, quantity, total: quantity * price } : item
+      item.idRow === idRow ? { ...item, quantity, total: quantity * price } : item
     );
     saveCart(newCart);
   };
@@ -92,8 +93,8 @@ const Cart: React.FC = () => {
 
       const newOrder = {
         id: `ORD${Date.now()}`,
-        userId: user?.id,
-        userName: user?.fullName,
+        userId: user?.user?.id,
+        userName: user?.user?.fullName || '',
         address: values.address,
         note: values.note,
         items: selectedProducts,
@@ -106,7 +107,7 @@ const Cart: React.FC = () => {
       localStorage.setItem('orders', JSON.stringify(updatedOrders));
       setOrders(updatedOrders);
 
-      await orderService.createOrder(newOrder);
+      await orderService.add(newOrder);
 
       setSelectedRowKeys([]);
       setIsModalOpen(false);
@@ -160,7 +161,7 @@ const Cart: React.FC = () => {
                 min={1}
                 max={item.stock}
                 value={item.quantity || 1}
-                onChange={val => handleQuantityChange(item.id, val || 1, item.price)}
+                onChange={val => handleQuantityChange(item.idRow, val || 1, item.price)}
               />
               <span style={{ marginLeft: 8, color: '#888' }}>[Còn: {item.stock}]</span>
             </div>
@@ -190,7 +191,7 @@ const Cart: React.FC = () => {
     {
       title: 'Hình thức',
       dataIndex: 'paymentMethod',
-      render: (v: string) => (v === 'online' ? 'Online' : 'Tại cửa hàng'),
+      render: (v: string) => (v === 'online' ? 'Thanh toán Online' : 'Thanh toán sau'),
     },
     {
       title: 'Thời gian',
@@ -237,11 +238,43 @@ const Cart: React.FC = () => {
           dataSource={orders}
           rowKey="id"
           pagination={{ pageSize: 5 }}
+          expandable={{
+            expandedRowRender: (record: any) => (
+              <Card type="inner" title="Thông tin đơn hàng">
+                <Table
+                  dataSource={record.items}
+                  rowKey="productId"
+                  pagination={false}
+                  size="small"
+                  columns={[
+                    { title: 'Sản phẩm', dataIndex: 'name' },
+                    { title: 'Size', dataIndex: 'size' },
+                    { title: 'Màu sắc', dataIndex: 'color' },
+                    { title: 'Số lượng', dataIndex: 'quantity' },
+                    {
+                      title: 'Đơn giá',
+                      dataIndex: 'price',
+                      render: (price: number) =>
+                        `${new Intl.NumberFormat('vi-VN').format(price)} VND`,
+                    },
+                    {
+                      title: 'Thành tiền',
+                      key: 'total',
+                      render: (_, item) =>
+                        `${new Intl.NumberFormat('vi-VN').format(
+                          item.quantity * item.price
+                        )} VND`,
+                    },
+                  ]}
+                />
+              </Card>
+            ),
+          }}
         />
       )}
 
       <Modal
-        title="Xác nhận đơn hàng"
+        title="Xác nhận thông tin đơn hàng"
         open={isModalOpen}
         onOk={onModalOk}
         onCancel={() => setIsModalOpen(false)}
@@ -267,7 +300,7 @@ const Cart: React.FC = () => {
             rules={[{ required: true, message: 'Chọn phương thức thanh toán' }]}
           >
             <Select>
-              <Option value="cod">Thanh toán tại cửa hàng</Option>
+              <Option value="cod">Thanh toán sau</Option>
               <Option value="online">Thanh toán Online</Option>
             </Select>
           </Form.Item>

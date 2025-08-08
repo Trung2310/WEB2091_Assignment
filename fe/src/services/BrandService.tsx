@@ -1,12 +1,8 @@
 import api from '../configs/api';
+import type { Brand } from '../interfaces/brands';
+import type { CrudService } from '../interfaces/crud';
 
-export interface Brand {
-  id: number;
-  name: string;
-  origin?: string;
-}
-
-export const brandService = {
+export const brandService: CrudService<Brand, Omit<Brand, 'id'>, number> = {
   getAll: async (): Promise<Brand[]> => {
     const res = await api.get(`/brands`);
     return res.data;
