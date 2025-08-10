@@ -1,10 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Table, InputNumber, Select, Button, message, Divider, Typography, Modal, Input, Form, } from 'antd';
-import { useAuth } from '../../../components/AuthContext';
-import dayjs from 'dayjs';
-import { orderService } from '../../../services/OrderService';
-import { CopyOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import {
+  Table,
+  InputNumber,
+  Select,
+  Button,
+  message,
+  Divider,
+  Typography,
+  Modal,
+  Input,
+  Form,
+} from "antd";
+import { useAuth } from "../../../components/AuthContext";
+import dayjs from "dayjs";
+import { orderService } from "../../../services/OrderService";
+import { CopyOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -16,58 +27,71 @@ const Cart: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const { user } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart') || '[]').reverse();
+    const storedCart = JSON.parse(
+      localStorage.getItem("cart") || "[]"
+    ).reverse();
     setCart(storedCart);
 
-    const storedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+    const storedOrders = JSON.parse(localStorage.getItem("orders") || "[]");
     setOrders(storedOrders);
   }, []);
 
   const saveCart = (data: any[]) => {
     setCart(data);
-    localStorage.setItem('cart', JSON.stringify(data));
+    localStorage.setItem("cart", JSON.stringify(data));
   };
 
-  const handleQuantityChange = (id: number, quantity: number, price: number) => {
-    const newCart = cart.map(item =>
+  const handleQuantityChange = (
+    id: number,
+    quantity: number,
+    price: number
+  ) => {
+    const newCart = cart.map((item) =>
       item.id === id ? { ...item, quantity, total: quantity * price } : item
     );
     saveCart(newCart);
   };
 
   const handleSizeChange = (id: number, size: number) => {
-    const newCart = cart.map(item =>
+    const newCart = cart.map((item) =>
       item.id === id ? { ...item, size } : item
     );
     saveCart(newCart);
   };
 
   const handleRemove = (idRow: number) => {
-    const newCart = cart.filter(item => item.idRow !== idRow);
+    const newCart = cart.filter((item) => item.idRow !== idRow);
     saveCart(newCart);
-    message.success('Đã xóa sản phẩm khỏi giỏ hàng');
+    message.success("Đã xóa sản phẩm khỏi giỏ hàng");
   };
 
   const handleRemoveAll = () => {
     saveCart([]);
     setSelectedRowKeys([]);
-    message.success('Đã xóa toàn bộ giỏ hàng');
+    message.success("Đã xóa toàn bộ giỏ hàng");
   };
 
   const handleBuySelected = () => {
-    if (selectedRowKeys.length === 0) {
-      message.warning('Vui lòng chọn ít nhất một sản phẩm để mua.');
-      return;
-    }
-    setIsModalOpen(true);
-  };
+  if (selectedRowKeys.length === 0) {
+    message.warning('Vui lòng chọn ít nhất một sản phẩm để mua.');
+    return;
+  }
+
+  const selectedProducts = cart.filter(item =>
+    selectedRowKeys.includes(item.idRow)
+  );
+
+  localStorage.setItem('cart', JSON.stringify(selectedProducts)); 
+  
+  navigate('/checkout');
+};
 
   const duplicateProduct = (idRow: any) => {
     const product = cart.find((item) => item.idRow === idRow);
-    if (!product) return message.error('Không tìm thấy sản phẩm để sao chép');
+    if (!product) return message.error("Không tìm thấy sản phẩm để sao chép");
 
     const duplicated = {
       ...product,
@@ -76,17 +100,16 @@ const Cart: React.FC = () => {
 
     const newCart = [duplicated, ...cart];
     setCart(newCart);
-    localStorage.setItem('cart', JSON.stringify(newCart));
+    localStorage.setItem("cart", JSON.stringify(newCart));
 
-    message.success('Đã tạo bản sao sản phẩm');
+    message.success("Đã tạo bản sao sản phẩm");
   };
-
 
   const onModalOk = async () => {
     try {
       const values = await form.validateFields();
 
-      const selectedProducts = cart.filter(item =>
+      const selectedProducts = cart.filter((item) =>
         selectedRowKeys.includes(item?.idRow)
       );
 
@@ -97,13 +120,16 @@ const Cart: React.FC = () => {
         address: values.address,
         note: values.note,
         items: selectedProducts,
-        total: selectedProducts.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        total: selectedProducts.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        ),
         paymentMethod: values.paymentMethod,
         createdAt: new Date(),
       };
 
       const updatedOrders = [newOrder, ...orders];
-      localStorage.setItem('orders', JSON.stringify(updatedOrders));
+      localStorage.setItem("orders", JSON.stringify(updatedOrders));
       setOrders(updatedOrders);
 
       await orderService.createOrder(newOrder);
@@ -112,29 +138,39 @@ const Cart: React.FC = () => {
       setIsModalOpen(false);
       form.resetFields();
 
-      message.success('Đặt hàng thành công!');
+      message.success("Đặt hàng thành công!");
     } catch (err) {
-      console.log('Lỗi xác nhận đơn hàng:', err);
+      console.log("Lỗi xác nhận đơn hàng:", err);
     }
   };
 
   const cartColumns = [
     {
-      title: 'Thông tin sản phẩm',
-      dataIndex: 'name',
+      title: "Thông tin sản phẩm",
+      dataIndex: "name",
       render: (_: any, item: any) => (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, padding: 10, border: '1px solid #ccc', borderRadius: 8 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 20,
+            padding: 10,
+            border: "1px solid #ccc",
+            borderRadius: 8,
+          }}
+        >
           <div style={{ flex: 1 }}>
             <Button
               type="primary"
               icon={<CopyOutlined />}
               size="small"
               onClick={() => duplicateProduct(item.idRow)}
-              style={{ position: 'absolute', top: 8, right: 8 }}
+              style={{ position: "absolute", top: 8, right: 8 }}
             />
             <h4
               onClick={() => navigate(`/products/${item.id}`)}
-              style={{ cursor: 'pointer', color: '#1677ff' }}
+              style={{ cursor: "pointer", color: "#1677ff" }}
             >
               {item.name}
             </h4>
@@ -145,11 +181,13 @@ const Cart: React.FC = () => {
               <label>Size: </label>
               <Select
                 value={item.size}
-                onChange={val => handleSizeChange(item.id, val)}
+                onChange={(val) => handleSizeChange(item.id, val)}
                 style={{ width: 100 }}
               >
                 {(item.sizeList || []).map((s: any) => (
-                  <Option key={s} value={s}>{s}</Option>
+                  <Option key={s} value={s}>
+                    {s}
+                  </Option>
                 ))}
               </Select>
             </div>
@@ -160,15 +198,40 @@ const Cart: React.FC = () => {
                 min={1}
                 max={item.stock}
                 value={item.quantity || 1}
-                onChange={val => handleQuantityChange(item.id, val || 1, item.price)}
+                onChange={(val) =>
+                  handleQuantityChange(item.id, val || 1, item.price)
+                }
               />
-              <span style={{ marginLeft: 8, color: '#888' }}>[Còn: {item.stock}]</span>
+              <span style={{ marginLeft: 8, color: "#888" }}>
+                [Còn: {item.stock}]
+              </span>
             </div>
             <p>Thành tiền: {item?.total?.toLocaleString()} VND</p>
-            <Button danger size="small" icon={<DeleteOutlined />} style={{ position: 'absolute', bottom: 0, right: 0, }} onClick={() => handleRemove(item.idRow)} />
+
+            <Button
+              danger
+              size="small"
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+              }}
+              onClick={() => handleRemove(item.idRow)}
+            >
+              Xóa
+            </Button>
           </div>
           <div style={{ marginLeft: 20 }}>
-            <img src={item.image} alt={item.name} style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 8 }} />
+            <img
+              src={item.image}
+              alt={item.name}
+              style={{
+                width: 100,
+                height: 100,
+                objectFit: "cover",
+                borderRadius: 8,
+              }}
+            />
           </div>
         </div>
       ),
@@ -181,22 +244,22 @@ const Cart: React.FC = () => {
   };
 
   const orderColumns = [
-    { title: 'Mã đơn', dataIndex: 'id' },
+    { title: "Mã đơn", dataIndex: "id" },
     {
-      title: 'Tổng tiền',
-      dataIndex: 'total',
+      title: "Tổng tiền",
+      dataIndex: "total",
       render: (v: number) => `${v.toLocaleString()}₫`,
     },
     {
-      title: 'Hình thức',
-      dataIndex: 'paymentMethod',
-      render: (v: string) => (v === 'online' ? 'Online' : 'Tại cửa hàng'),
+      title: "Hình thức",
+      dataIndex: "paymentMethod",
+      render: (v: string) => (v === "online" ? "Online" : "Tại cửa hàng"),
     },
     {
-      title: 'Thời gian',
-      dataIndex: 'createdAt',
-      render: (value: any) => dayjs(value).format('DD/MM/YYYY HH:mm:ss'),
-    }
+      title: "Thời gian",
+      dataIndex: "createdAt",
+      render: (value: any) => dayjs(value).format("DD/MM/YYYY HH:mm:ss"),
+    },
   ];
 
   return (
@@ -215,7 +278,7 @@ const Cart: React.FC = () => {
             pagination={{ pageSize: 3 }}
           />
 
-          <div style={{ marginTop: 20, display: 'flex', gap: 10 }}>
+          <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
             <Button type="primary" onClick={handleBuySelected}>
               Mua các sản phẩm đã chọn
             </Button>
@@ -248,11 +311,15 @@ const Cart: React.FC = () => {
         okText="Xác nhận đặt hàng"
         cancelText="Hủy"
       >
-        <Form layout="vertical" form={form} initialValues={{ paymentMethod: 'online' }}>
+        <Form
+          layout="vertical"
+          form={form}
+          initialValues={{ paymentMethod: "online" }}
+        >
           <Form.Item
             label="Địa chỉ nhận hàng"
             name="address"
-            rules={[{ required: true, message: 'Vui lòng nhập địa chỉ' }]}
+            rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
           >
             <Input.TextArea placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" />
           </Form.Item>
@@ -264,7 +331,7 @@ const Cart: React.FC = () => {
           <Form.Item
             label="Phương thức thanh toán"
             name="paymentMethod"
-            rules={[{ required: true, message: 'Chọn phương thức thanh toán' }]}
+            rules={[{ required: true, message: "Chọn phương thức thanh toán" }]}
           >
             <Select>
               <Option value="cod">Thanh toán tại cửa hàng</Option>

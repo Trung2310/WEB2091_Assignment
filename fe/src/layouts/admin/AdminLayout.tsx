@@ -2,7 +2,6 @@ import React from "react";
 import { Layout, Menu } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
-  DashboardOutlined,
   UserOutlined,
   ShoppingCartOutlined,
   MenuOutlined,
@@ -28,7 +27,6 @@ const AdminLayout: React.FC = () => {
           selectedKeys={[location.pathname]}
           onClick={(e) => navigate(e.key)}
           items={[
-            { key: "/admin/dashboard", icon: <DashboardOutlined />, label: "Dashboard" },
             { key: "/admin/users", icon: <UserOutlined />, label: "Người dùng" },
             { key: "/admin/products", icon: <ShoppingCartOutlined />, label: "Sản phẩm" },
             { key: "/admin/categories", icon: <MenuFoldOutlined />, label: "Danh mục" },
@@ -49,7 +47,7 @@ const AdminLayout: React.FC = () => {
             height: 64,
           }}
         >
-          <h5 className="mb-0" style={{ margin: "0 auto" }}>Quản trị hệ thống</h5>
+          <h5 className="mb-0" style={{ margin: "0 auto" }}>Admin Control</h5>
         </Header>
 
         <Content className="p-4" style={{

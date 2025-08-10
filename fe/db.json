@@ -55,6 +55,14 @@
       "role": "customer",
       "isActive": true,
       "id": "CUS7715"
+    },
+    {
+      "id": "CUS2492",
+      "fullName": "Anh Tú",
+      "email": "abc@gmail.com",
+      "password": "123456",
+      "role": "customer",
+      "isActive": true
     }
   ],
   "products": [

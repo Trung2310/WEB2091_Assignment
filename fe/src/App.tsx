@@ -2,7 +2,6 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminLayout from "./layouts/admin/AdminLayout";
 import ClientLayout from "./layouts/client/ClientLayout";
-import Dashboard from "./pages/admin/dashboard/Dashboard";
 import Users from "./pages/admin/users/Users";
 import Products from "./pages/admin/products/Products";
 import CategoryManager from "./pages/admin/categories/Categories";
@@ -16,6 +15,7 @@ import ProductDetail from "./pages/client/productdetail/ProducDetail";
 import Cart from "./pages/client/cart/Cart";
 import Order from "./pages/client/order/Order";
 import Categories from "./pages/client/categories/Categories";
+import Checkout from "./pages/client/checkout/Checkout";
 
 function App() {
   const router = createBrowserRouter([
@@ -23,11 +23,6 @@ function App() {
       path: "/admin",
       element: <AdminLayout />,
       children: [
-        {
-          path: "dashboard",
-          index: true,
-          element: <Dashboard />,
-        },
         {
           path: "users",
           element: <Users />,
@@ -73,6 +68,10 @@ function App() {
         { 
           path: "cart",
           element: <Cart /> 
+        },
+        {
+          path: "checkout",
+          element: <Checkout />
         },
         { 
           path: "order",
